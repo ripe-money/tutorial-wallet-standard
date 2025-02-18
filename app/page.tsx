@@ -20,7 +20,8 @@ export default function Home() {
               wallet.chains.includes(SOLANA_MAINNET_CHAIN)
             )}
           >
-            {i + 1}: {wallet.name}
+            {i + 1}: {wallet.name}&nbsp;
+            ({wallet.chains[0].split(':')[0]})
           </button>
         ))}
       </div>
