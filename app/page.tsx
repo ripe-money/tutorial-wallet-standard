@@ -26,17 +26,17 @@ export default function Home() {
         Available Wallets:
       </h1>
       <div className="flex flex-col">
-        {availableWallets.map((wallet, i) => (
-          <button key={i} className="btn btn-primary m-2"
-            disabled={!(
-              StandardConnect in wallet.features &&
-              wallet.chains.includes(SOLANA_MAINNET_CHAIN)
-            )}
-          >
-            {i + 1}: {wallet.name}&nbsp;
-            ({wallet.chains[0].split(':')[0]})
-          </button>
-        ))}
+        {availableWallets.map((wallet, i) => {
+          const isEnabled = StandardConnect in wallet.features && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
+          const buttonStatus = 'primary';
+
+          return (
+            <button key={i} className={`btn btn-${buttonStatus} m-2`} disabled={!isEnabled}>
+              {i + 1}: {wallet.name}&nbsp;
+              ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
+            </button>
+          );
+        })}
       </div>
     </>
   );
