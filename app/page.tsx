@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 
-import { getWallets, StandardConnect } from '@wallet-standard/core';
+import { getWallets, StandardConnect, type Wallet } from '@wallet-standard/core';
 import { registerWalletAdapter, SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 
 import {
@@ -31,7 +31,7 @@ export default function Home() {
           const buttonStatus = 'primary';
 
           return (
-            <button key={i} className={`btn btn-${buttonStatus} m-2`} disabled={!isEnabled}>
+            <button key={i} className={`btn btn-${buttonStatus} m-2`} disabled={!isEnabled} onClick={() => connectWallet(wallet)}>
               {i + 1}: {wallet.name}&nbsp;
               ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
             </button>
@@ -41,3 +41,14 @@ export default function Home() {
     </>
   );
 }
+
+const connectWallet = async (wallet: Wallet) => {
+  console.log('Connecting to wallet:', wallet.name);
+  try {
+    const connectFeature = wallet.features[StandardConnect] as { connect: () => Promise<void> };
+    await connectFeature.connect();
+    console.log('Connected to wallet with accounts:', wallet.accounts.map(account => account.address));
+  } catch (error) {
+    console.error('Failed to connect to wallet:', wallet.name, error);
+  }
+};
