@@ -2,11 +2,10 @@
 
 // May be helpful to look at the Solana sample app
 // https://github.com/anza-xyz/solana-web3.js/tree/main/examples/react-app/src
+
 import {
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
   useWallets,
-  // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
-  // getWalletFeature,
   // https://github.com/wallet-standard/wallet-standard/tree/master/packages/ui/compare
   // getUiWalletAccountStorageKey,
 } from '@wallet-standard/react';
