@@ -1,11 +1,24 @@
-import { getWallets, StandardConnect, type Wallet } from '@wallet-standard/core';
+'use client';
+
+// May be helpful to look at the Solana sample app
+// https://github.com/anza-xyz/solana-web3.js/tree/main/examples/react-app/src
+import {
+  // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
+  UiWallet,
+  // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
+  useWallets, useConnect,
+  // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
+  // getWalletFeature,
+  // https://github.com/wallet-standard/wallet-standard/tree/master/packages/ui/compare
+  // getUiWalletAccountStorageKey,
+} from '@wallet-standard/react';
+
+import { StandardConnect } from '@wallet-standard/core';
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 
-const wallets = getWallets();
-
 export default function WalletList() {
-  const availableWallets = wallets.get();
-  console.log(availableWallets);
+  const wallets = useWallets();
+  console.log(wallets);
 
   return (
     <>
@@ -13,30 +26,47 @@ export default function WalletList() {
         Available Wallets:
       </h1>
       <div className="flex flex-col">
-        {availableWallets.map((wallet, i) => {
-          const isEnabled = StandardConnect in wallet.features && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
-          const buttonStatus = 'primary';
+        {wallets.map((wallet, i) => {
+          const supportStandardConnect = wallet.features.includes(StandardConnect) && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
-          return (
-            <button key={i} className={`btn btn-${buttonStatus} m-2`} disabled={!isEnabled} onClick={() => connectWallet(wallet)}>
-              {i + 1}: {wallet.name}&nbsp;
-              ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
-            </button>
-          );
+          if (!supportStandardConnect) {
+            return (
+              <button key={i} className={ConnectButtonClass} disabled>
+                <ConnectButtonText wallet={wallet} />
+              </button>
+            );
+          } else {
+            return (
+              <WalletConnectButton key={i} wallet={wallet}>
+                <ConnectButtonText wallet={wallet} />
+              </WalletConnectButton>
+            );
+          }
         })}
       </div>
     </>
   );
 }
 
-const connectWallet = async (wallet: Wallet) => {
-  console.log('Connecting to wallet:', wallet.name);
-  try {
-    const connectFeature = wallet.features[StandardConnect] as { connect: () => Promise<void> };
-    await connectFeature.connect();
-    console.log('Connected to wallet with accounts:', wallet.accounts.map(account => account.address));
-    console.log(wallets.get())
-  } catch (error) {
-    console.error('Failed to connect to wallet:', wallet.name, error);
+function WalletConnectButton({ wallet, children }: { wallet: UiWallet, children?: React.ReactNode }) {
+  const [isConnecting, connect] = useConnect(wallet);
+
+  const handleConnectClick = async () => {
+    const nextAccounts = await connect();
+    console.log('Connected to wallet with accounts:', nextAccounts.map(account => account.address));
   }
-};
+
+  return (
+    <button className={ConnectButtonClass} disabled={isConnecting} onClick={handleConnectClick}>
+      {isConnecting ? 'Connecting...' : children}
+    </button>
+  );
+}
+
+const ConnectButtonClass = 'btn btn-primary m-2';
+const ConnectButtonText = ({wallet}: { wallet: UiWallet }) => (
+  <>
+    {wallet.name}&nbsp;
+    ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
+  </>
+);
