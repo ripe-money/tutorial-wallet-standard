@@ -24,7 +24,10 @@ export default function WalletList() {
       </h1>
       <div className="flex flex-col">
         {wallets.map((wallet, i) => (
-          <WalletButton key={i} wallet={wallet} />
+          <WalletButton key={i} wallet={wallet} onWalletConnect={accounts => {
+            console.log('Connected to accounts:', accounts.map(account => account.address));
+          }}
+          />
         ))}
       </div>
     </>

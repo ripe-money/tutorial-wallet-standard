@@ -2,7 +2,7 @@
 
 import {
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
-  UiWallet,
+  UiWallet, UiWalletAccount,
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
   useConnect,
 } from '@wallet-standard/react';
@@ -10,15 +10,20 @@ import {
 import { StandardConnect } from '@wallet-standard/core';
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 
-export default function WalletButton({ wallet }: { wallet: UiWallet }) {
+type WalletButtonProps = Readonly<{
+  onWalletConnect: (accounts: readonly UiWalletAccount[]) => void;
+  wallet: UiWallet
+}>
+
+export default function WalletButton({ wallet, onWalletConnect }: WalletButtonProps) {
   const supportStandardConnect = wallet.features.includes(StandardConnect) && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
   // Note: Show WalletConnectButton only if the wallet supports StandardConnect
-  // because calling useConnect() on a wallet that doesn't support StandardConnect
-  // will throw an error.
+  // because calling useConnect() (in WalletConnectButton) on a wallet
+  // that doesn't support StandardConnect will throw an error.
   if (supportStandardConnect) {
     return (
-      <WalletConnectButton wallet={wallet}>
+      <WalletConnectButton wallet={wallet} onWalletConnect={onWalletConnect}>
         <ConnectButtonText wallet={wallet} />
       </WalletConnectButton>
     );
@@ -31,16 +36,20 @@ export default function WalletButton({ wallet }: { wallet: UiWallet }) {
   }
 }
 
-function WalletConnectButton({ wallet, children }: { wallet: UiWallet, children?: React.ReactNode }) {
+type WalletConnectButtonProps = Readonly<{
+  onWalletConnect: (accounts: readonly UiWalletAccount[]) => void;
+  wallet: UiWallet;
+  children?: React.ReactNode;
+}>
+
+function WalletConnectButton({ wallet, onWalletConnect, children }: WalletConnectButtonProps) {
   const [isConnecting, connect] = useConnect(wallet);
 
-  const handleConnectClick = async () => {
-    const nextAccounts = await connect();
-    console.log('Connected to wallet with accounts:', nextAccounts.map(account => account.address));
-  }
-
   return (
-    <button className={ConnectButtonClass} disabled={isConnecting} onClick={handleConnectClick}>
+    <button className={ConnectButtonClass} disabled={isConnecting} onClick={async () => {
+      const accounts = await connect();
+      onWalletConnect(accounts);
+    }}>
       {isConnecting ? 'Connecting...' : children}
     </button>
   );
