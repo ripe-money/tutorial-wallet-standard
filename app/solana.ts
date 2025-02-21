@@ -20,7 +20,7 @@ export const getBalance = async (account: WalletAccount) => {
     { mint: address('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') }, // USDC
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
-  info.value.forEach((account) => {
-    console.log('USDC:', account.account.data.parsed.info.tokenAmount.uiAmount);
+  info.value.forEach((tokenAccount) => {
+    console.log('USDC:', tokenAccount.account.data.parsed.info.tokenAmount.uiAmount);
   });
 }
