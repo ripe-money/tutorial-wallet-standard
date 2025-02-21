@@ -11,6 +11,7 @@ import {
 } from '@wallet-standard/react';
 
 import WalletButton from './WalletButton';
+import { getSolBalance } from './solana';
 
 export default function WalletList() {
   const wallets = useWallets();
@@ -23,8 +24,12 @@ export default function WalletList() {
       </h1>
       <div className="flex flex-col">
         {wallets.map((wallet, i) => (
-          <WalletButton key={i} wallet={wallet} onWalletConnect={accounts => {
+          <WalletButton key={i} wallet={wallet} onWalletConnect={async (accounts) => {
             console.log('Connected to accounts:', accounts.map(account => account.address));
+            if (accounts.length > 0) {
+              const formattedSolValue = await getSolBalance(accounts[0]);
+              console.log('Balance:', formattedSolValue, 'SOL');
+            }
           }}
           />
         ))}
