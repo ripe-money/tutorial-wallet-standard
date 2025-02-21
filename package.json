@@ -9,8 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@solana/wallet-adapter-wallets": "^0.19.32",
-    "@solana/wallet-standard": "^1.1.4",
+    "@solana/web3.js": "^2.0.0",
     "@tailwindcss/postcss": "^4.0.7",
     "@wallet-standard/core": "^1.1.0",
     "@wallet-standard/react": "^1.0.0",

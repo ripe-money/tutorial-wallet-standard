@@ -8,7 +8,8 @@ import {
 } from '@wallet-standard/react';
 
 import { StandardConnect, StandardConnectFeature, WalletAccount } from '@wallet-standard/core';
-import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
+// import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
+const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
 
 type WalletButtonProps = Readonly<{
   onWalletConnect: (accounts: readonly WalletAccount[]) => void;

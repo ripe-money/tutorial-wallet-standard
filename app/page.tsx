@@ -1,9 +1,15 @@
 'use client';
-import { useEffect } from 'react';
 
-import { registerWalletAdapter, SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
+// import { useEffect } from 'react';
 
-import WalletList from './WalletList';
+// import { registerWalletAdapter, SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
+
+/**
+ * These adapters could've been used to register Solana providers for Coinbase and MetaMask,
+ * which don't natively support Wallet Standard (as of Feb 2025). However, these adapters
+ * are using v1 of @solana/web3.js, which conflicts with our use of v2.
+ * 
+ * We may have to write our own adapters for these wallets.
 
 import {
   CoinbaseWalletAdapter, // Need this to expose the Coinbase wallet
@@ -11,12 +17,16 @@ import {
 } from '@solana/wallet-adapter-wallets';
 const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 
+*/
+
+import WalletList from './WalletList';
+
 export default function Home() {
   // Register adapters for wallets that don't natively support Wallet Standard
-  useEffect(() => {
-    const destructors = adapters.map((adapter) => registerWalletAdapter(adapter, SOLANA_MAINNET_CHAIN));
-    return () => destructors.forEach((destroy) => destroy());
-  }, []);
+  // useEffect(() => {
+  //   const destructors = adapters.map((adapter) => registerWalletAdapter(adapter, SOLANA_MAINNET_CHAIN));
+  //   return () => destructors.forEach((destroy) => destroy());
+  // }, []);
 
   return <WalletList />;
 }
