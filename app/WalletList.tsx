@@ -14,8 +14,8 @@ import WalletButton from './WalletButton';
 import { getBalance } from './solana';
 
 export default function WalletList() {
-  const wallets = useWallets();
-  console.log(wallets);
+  const availableWallets = useWallets();
+  console.log(availableWallets);
 
   return (
     <>
@@ -23,7 +23,7 @@ export default function WalletList() {
         Available Wallets:
       </h1>
       <div className="flex flex-col">
-        {wallets.map((wallet, i) => (
+        {availableWallets.map((wallet, i) => (
           <WalletButton key={i} wallet={wallet} onWalletConnect={async (accounts) => {
             console.log('Connected to accounts:', accounts.map(account => account.address));
             if (accounts.length > 0) {
