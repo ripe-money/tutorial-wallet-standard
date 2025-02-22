@@ -1,15 +1,29 @@
-import React, { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import SelectedAccountContext from './context/SelectedAccountContext';
+import { getSolUsdcBalance } from './solana';
 
 const WalletBalance = () => {
   const { selectedAccount } = useContext(SelectedAccountContext);
-  console.log('Selected account:', selectedAccount);
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (selectedAccount) {
+      console.log('Fetching balance for account:', selectedAccount);
+
+      // getSolBalance(selectedAccount);
+      getSolUsdcBalance(selectedAccount).then(balance => setBalance(balance));
+    }
+  }, [selectedAccount]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        Wallet Balance Component
+        {!selectedAccount
+          ? 'No account selected'
+          : (balance === null
+            ? 'Loading balance...'
+            : `Balance: ${balance} USDC`)}
       </h1>
     </div>
   );

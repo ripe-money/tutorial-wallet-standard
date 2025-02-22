@@ -1,4 +1,6 @@
 'use client';
+// May be helpful to look at the Solana sample app
+// https://github.com/anza-xyz/solana-web3.js/tree/main/examples/react-app/src
 
 // import { useEffect } from 'react';
 
