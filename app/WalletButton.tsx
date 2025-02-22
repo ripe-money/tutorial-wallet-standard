@@ -1,4 +1,5 @@
 'use client';
+import { useContext } from 'react';
 
 import {
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
@@ -7,17 +8,18 @@ import {
   getWalletFeature,
 } from '@wallet-standard/react';
 
-import { StandardConnect, StandardConnectFeature, WalletAccount } from '@wallet-standard/core';
+import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
 // import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
 
-type WalletButtonProps = Readonly<{
-  onWalletConnect: (accounts: readonly WalletAccount[]) => void;
-  wallet: UiWallet
-}>
+import SelectedAccountContext from './context/SelectedAccountContext';
 
-export default function WalletButton({ wallet, onWalletConnect }: WalletButtonProps) {
-  const supportStandardConnect = wallet.features.includes(StandardConnect) && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
+export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
+  const { setSelectedAccount } = useContext(SelectedAccountContext);
+
+  const supportStandardConnect =
+    wallet.features.includes(StandardConnect)
+    && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
   return (
     <button
@@ -25,9 +27,15 @@ export default function WalletButton({ wallet, onWalletConnect }: WalletButtonPr
       disabled={!supportStandardConnect}
       onClick={async () => {
         if (supportStandardConnect) {
-          const connectFeature = getWalletFeature(wallet, StandardConnect) as StandardConnectFeature[typeof StandardConnect];
+          const connectFeature =
+            getWalletFeature(wallet, StandardConnect) as StandardConnectFeature[typeof StandardConnect];
           const accounts = (await connectFeature.connect()).accounts;
-          onWalletConnect(accounts);
+          if (accounts.length > 0) setSelectedAccount(accounts[0]);
+
+          console.log(
+            `Connected to ${wallet.name} with accounts:`,
+            accounts.map(account => account.address)
+          );
         }
       }}
     >
