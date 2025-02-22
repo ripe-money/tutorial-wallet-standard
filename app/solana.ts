@@ -1,4 +1,4 @@
-import { WalletAccount } from "@wallet-standard/core";
+import type { WalletAccount } from "@wallet-standard/core";
 
 import { address } from '@solana/web3.js';
 
