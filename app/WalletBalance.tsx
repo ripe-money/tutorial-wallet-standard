@@ -23,10 +23,18 @@ const WalletBalance = () => {
           ? 'No account selected'
           : (balance === null
             ? 'Loading balance...'
-            : `Balance: ${balance} USDC`)}
+            : `${formatAddress(selectedAccount.address)} has ${formatBalance(balance)} USDC`)}
       </h1>
     </div>
   );
 };
+
+const formatAddress = (address: string) => {
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+}
+
+const formatBalance = (balance: number) => {
+  return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(balance);
+}
 
 export default WalletBalance;
