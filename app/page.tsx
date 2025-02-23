@@ -21,7 +21,7 @@ const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 
 */
 
-import { ConnectedAccountContextProvider } from './context/SelectedAccountContext';
+import { ConnectedAccountContextProvider } from './context/ConnectedAccountContext';
 import WalletBalance from './WalletBalance';
 import WalletList from './WalletList';
 

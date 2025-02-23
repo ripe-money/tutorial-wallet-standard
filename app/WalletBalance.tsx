@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 
-import ConnectedAccountContext from './context/SelectedAccountContext';
+import ConnectedAccountContext from './context/ConnectedAccountContext';
 import { getSolUsdcBalance } from './solana';
 
 const WalletBalance = () => {
