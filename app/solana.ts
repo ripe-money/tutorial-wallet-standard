@@ -1,7 +1,12 @@
 import type { WalletAccount } from "@wallet-standard/core";
+import type { UiWallet } from "@wallet-standard/react";
 
 import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
 import { address, createSolanaRpc } from '@solana/web3.js';
+
+// import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
+const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
+export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
   createSolanaRpc('https://sibylla-ghbj3j-fast-mainnet.helius-rpc.com');
