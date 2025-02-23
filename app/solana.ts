@@ -1,8 +1,7 @@
 import type { WalletAccount } from "@wallet-standard/core";
 
-import { address } from '@solana/web3.js';
-
-import { createSolanaRpc, Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
+import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
+import { address, createSolanaRpc } from '@solana/web3.js';
 
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
   createSolanaRpc('https://sibylla-ghbj3j-fast-mainnet.helius-rpc.com');
