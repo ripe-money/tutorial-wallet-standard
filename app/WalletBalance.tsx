@@ -4,26 +4,26 @@ import ConnectedAccountContext from './context/SelectedAccountContext';
 import { getSolUsdcBalance } from './solana';
 
 const WalletBalance = () => {
-  const { selectedAccount } = useContext(ConnectedAccountContext);
+  const { connectedAccount } = useContext(ConnectedAccountContext);
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (selectedAccount) {
-      console.log('Fetching balance for account:', selectedAccount);
+    if (connectedAccount) {
+      console.log('Fetching balance for account:', connectedAccount);
 
-      // getSolBalance(selectedAccount);
-      getSolUsdcBalance(selectedAccount).then(balance => setBalance(balance));
+      // getSolBalance(connectedAccount);
+      getSolUsdcBalance(connectedAccount).then(balance => setBalance(balance));
     }
-  }, [selectedAccount]);
+  }, [connectedAccount]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {!selectedAccount
-          ? 'No account selected'
+        {!connectedAccount
+          ? 'No account connected'
           : (balance === null
             ? 'Loading balance...'
-            : `${formatAddress(selectedAccount.address)} has ${formatBalance(balance)} USDC`)}
+            : `${formatAddress(connectedAccount.address)} has ${formatBalance(balance)} USDC`)}
       </h1>
     </div>
   );
