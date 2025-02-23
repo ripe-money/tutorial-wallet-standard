@@ -11,7 +11,7 @@ const ConnectedAccountContext = createContext<{
   setSelectedAccount: () => {},
 });
 
-const SelectedAccountContextProvider = ({ children }: { children: ReactNode }) => {
+const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) => {
   const [selectedAccount, setSelectedAccount] = useState<WalletAccount | undefined>(undefined);
 
   return (
@@ -22,4 +22,4 @@ const SelectedAccountContextProvider = ({ children }: { children: ReactNode }) =
 }
 
 export default ConnectedAccountContext;
-export { SelectedAccountContextProvider };
+export { ConnectedAccountContextProvider as SelectedAccountContextProvider };
