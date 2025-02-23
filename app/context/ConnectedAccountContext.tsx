@@ -20,10 +20,12 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
 
   const connectUiWallet = async (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
-    const accounts = await _connectUiWallet(wallet);
-    if (accounts.length > 0) {
-      console.log('Connected accounts:', accounts);
-      setConnectedAccount(accounts[0]);
+
+    try {
+      const accounts = await _connectUiWallet(wallet);
+      if (accounts.length > 0) setConnectedAccount(accounts[0]);
+    } catch (WalletStandardError) {
+      console.error('Error. Maybe Standard Connect is not supported by wallet:', WalletStandardError);
     }
   };
 
