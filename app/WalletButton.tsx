@@ -36,13 +36,7 @@ export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>)
             accounts.map(account => account.address)
           );
 
-          if (accounts.length > 0) {
-            const { address, publicKey, chains, features, label, icon } = accounts[0];
-            setSelectedAccount({ address, publicKey, chains, features, label, icon, walletName: wallet.name });
-            // For some reason the spread operator (below) doesn't work.
-            // No type error is thrown, but properties of accounts[0] are not picked up.
-            // setSelectedAccount({ ...accounts[0], walletName: wallet.name });
-          }
+          if (accounts.length > 0) setSelectedAccount(accounts[0]);
         }
       }}
     >
