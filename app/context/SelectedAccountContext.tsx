@@ -4,22 +4,22 @@ import { createContext, useState, type ReactNode } from 'react';
 import type { WalletAccount } from "@wallet-standard/core";
 
 const ConnectedAccountContext = createContext<{
-  selectedAccount: WalletAccount | undefined;
-  setSelectedAccount: (account: WalletAccount) => void;
+  connectedAccount: WalletAccount | undefined;
+  setConnectedAccount: (account: WalletAccount) => void;
 }>({
-  selectedAccount: undefined,
-  setSelectedAccount: () => {},
+  connectedAccount: undefined,
+  setConnectedAccount: () => {},
 });
 
 const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedAccount, setSelectedAccount] = useState<WalletAccount | undefined>(undefined);
+  const [connectedAccount, setConnectedAccount] = useState<WalletAccount | undefined>(undefined);
 
   return (
-    <ConnectedAccountContext.Provider value={{ selectedAccount, setSelectedAccount }}>
+    <ConnectedAccountContext.Provider value={{ connectedAccount, setConnectedAccount }}>
       {children}
     </ConnectedAccountContext.Provider>
   );
 }
 
 export default ConnectedAccountContext;
-export { ConnectedAccountContextProvider as SelectedAccountContextProvider };
+export { ConnectedAccountContextProvider };

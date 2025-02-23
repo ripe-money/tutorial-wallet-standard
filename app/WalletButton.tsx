@@ -9,7 +9,7 @@ import { isSolanaWallet } from './solana';
 import { connectUiWallet } from './lib/wallet-standard';
 
 export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
-  const { setSelectedAccount } = useContext(ConnectedAccountContext);
+  const { setConnectedAccount } = useContext(ConnectedAccountContext);
 
   return (
     <button
@@ -17,7 +17,7 @@ export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>)
       disabled={!isSolanaWallet(wallet)}
       onClick={async () => {
         const accounts = await connectUiWallet(wallet);
-        if (accounts.length > 0) setSelectedAccount(accounts[0]);
+        if (accounts.length > 0) setConnectedAccount(accounts[0]);
       }}
     >
     {wallet.name}&nbsp;
