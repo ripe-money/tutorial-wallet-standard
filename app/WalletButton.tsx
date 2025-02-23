@@ -3,30 +3,25 @@ import { useContext } from 'react';
 
 import {
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
-  UiWallet,
+  type UiWallet,
   // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
   getWalletFeature,
 } from '@wallet-standard/react';
 
 import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
-// import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
-const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
 
 import SelectedAccountContext from './context/SelectedAccountContext';
+import { isSolanaWallet } from './solana';
 
 export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
   const { setSelectedAccount } = useContext(SelectedAccountContext);
 
-  const supportStandardConnect =
-    wallet.features.includes(StandardConnect)
-    && wallet.chains.includes(SOLANA_MAINNET_CHAIN);
-
   return (
     <button
       className="btn btn-primary m-2"
-      disabled={!supportStandardConnect}
+      disabled={!isSolanaWallet(wallet)}
       onClick={async () => {
-        if (supportStandardConnect) {
+        try {
           const connectFeature =
             getWalletFeature(wallet, StandardConnect) as StandardConnectFeature[typeof StandardConnect];
           const accounts = (await connectFeature.connect()).accounts;
@@ -37,6 +32,8 @@ export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>)
           );
 
           if (accounts.length > 0) setSelectedAccount(accounts[0]);
+        } catch (WalletStandardError) {
+          console.error('Error. Maybe Standard Connect is not supported by wallet:', WalletStandardError);
         }
       }}
     >
