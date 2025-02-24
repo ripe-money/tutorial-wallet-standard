@@ -13,10 +13,10 @@ import { saveWallet, loadWallet } from '../lib/localStore';
 
 const ConnectedWalletContext = createContext<{
   connectedWallet: UiWallet | undefined;
-  connectUiWallet: (wallet: UiWallet) => void;
+  connectWallet: (wallet: UiWallet) => void;
 }>({
   connectedWallet: undefined,
-  connectUiWallet: () => console.error('connectUiWallet not implemented'),
+  connectWallet: () => console.error('connectWallet not implemented'),
 });
 
 const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
@@ -44,14 +44,14 @@ const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) =
     _connectUiWallet({ wallet, silent: true });
   }, [_connectUiWallet, availableWallets, connectedWallet]);
 
-  const connectUiWallet = (wallet: UiWallet) => {
+  const connectWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
     _connectUiWallet({ wallet })
       .then(() => saveWallet(wallet));
   };
 
   return (
-    <ConnectedWalletContext.Provider value={{ connectedWallet: connectedWallet, connectUiWallet }}>
+    <ConnectedWalletContext.Provider value={{ connectedWallet: connectedWallet, connectWallet }}>
       {children}
     </ConnectedWalletContext.Provider>
   );
