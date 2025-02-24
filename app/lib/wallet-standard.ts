@@ -7,6 +7,9 @@ import {
 
 import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
 
+// Connect to a wallet using the Standard Connect feature.
+// The wallet is assumed to support the "standard:connect" feature,
+// otherwise WalletStandardError will be thrown.
 export const connectUiWallet = async (wallet: UiWallet) => {
   type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect];
   const connectFeature = getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType;
