@@ -14,6 +14,15 @@ const STORAGE_KEY = 'ripe:connected-wallet';
 const saveWallet = (wallet: UiWallet) => {
   localStorage.setItem(STORAGE_KEY, wallet.name);
 }
+const loadWallet = (availableWallets: readonly UiWallet[]) => {
+  const storedWalletName = localStorage.getItem(STORAGE_KEY);
+  if (!storedWalletName) return undefined;
+
+  const wallet = availableWallets.find((w: UiWallet) => w.name === storedWalletName);
+  if (!wallet) return undefined;
+
+  return wallet;
+}
 
 const ConnectedAccountContext = createContext<{
   connectedAccount: WalletAccount | undefined;
@@ -28,21 +37,18 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
   const availableWallets = useWallets();
 
   useEffect(() => {
-    const storedWalletName = localStorage.getItem(STORAGE_KEY);
+    if (connectedAccount) return; // already connected
 
-    // If we were previously connected to a wallet but not now, try to reconnect to it.
-    if (storedWalletName && !connectedAccount) {
-      const wallet = availableWallets.find((w: UiWallet) => w.name === storedWalletName);
-      if (!wallet) return; // The wallet may not be available yet.
+    const wallet = loadWallet(availableWallets);
+    if (!wallet) return; // The wallet may not be available yet.
 
-      console.log('Found wallet:', wallet);
+    console.log('Found wallet:', wallet);
 
-      _connectUiWallet(wallet)
-        .then((accounts) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
-        .catch((error) => {
-          console.error(`Error connecting to ${wallet.name}:`, error);
-        });
-    }
+    _connectUiWallet(wallet)
+      .then((accounts) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
+      .catch((error) => {
+        console.error(`Error connecting to ${wallet.name}:`, error);
+      });
   }, [availableWallets, connectedAccount]);
 
   const connectUiWallet = (wallet: UiWallet) => {
