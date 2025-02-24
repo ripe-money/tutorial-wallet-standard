@@ -14,11 +14,11 @@ const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
 export const getSolUsdcBalance = async (wallet: UiWallet) => {
   console.log('Getting USDC balance for', wallet);
 
-  const accounts = await connectWallet({ wallet });
-  if (accounts.length === 0) return 0;
+  const walletAddress = await getWalletAddress(wallet);
+  if (!walletAddress) return 0;
 
   const { value } = await rpc.getTokenAccountsByOwner(
-    address(accounts[0].address),
+    address(walletAddress),
     { mint: address('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') }, // USDC
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
@@ -26,16 +26,16 @@ export const getSolUsdcBalance = async (wallet: UiWallet) => {
   return value[0]?.account.data.parsed.info.tokenAmount.uiAmount || 0;
 };
 
-// Get the SOL balance of a Solana wallet
-// Not needed for our app, but keeping it here for reference
+// // Get the SOL balance of a Solana wallet
+// // Not needed for our app, but keeping it here to test it occasionally.
 // export const getSolBalance = async (wallet: UiWallet) => {
 //   console.log('Getting SOL balance for', wallet);
 
-//   const accounts = await connectWallet({ wallet });
-//   if (accounts.length === 0) return;
+//   const walletAddress = await getWalletAddress(wallet);
+//   if (!walletAddress) return;
 
 //   const { value: lamports } =
-//     await rpc.getBalance(address(accounts[0].address), { commitment: 'confirmed' }).send();
+//     await rpc.getBalance(address(walletAddress), { commitment: 'confirmed' }).send();
 
 //   const formattedValue = new Intl.NumberFormat(undefined, { maximumFractionDigits: 5 }).format(
 //     // @ts-expect-error This format string is 100% allowed now.
@@ -66,4 +66,11 @@ const connectWallet = async ({
   const { accounts } = await (getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType)
     .connect({ silent })
   return accounts;
+};
+
+export const getWalletAddress = async (wallet: UiWallet) => {
+  const accounts = await connectWallet({ wallet });
+  if (accounts.length === 0) return;
+
+  return accounts[0].address;
 };
