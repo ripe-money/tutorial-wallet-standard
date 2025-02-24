@@ -1,36 +1,11 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Barebone mobile dApp using Wallet Standard and @solana/web3.js v2
+This is a barebone app to explore a standard way of connecting to wallets by using [Wallet Standard](https://github.com/wallet-standard/wallet-standard). Wallet Standard is the [foundation](https://docs.phantom.com/developer-powertools/wallet-standard) for Solana Wallet Adapter. But unlike Solana Wallet Adapter, Wallet Standard is a cross-chain standard that's been [adopted by other chains such as Sui](https://docs.sui.io/standards/wallet-standard#managing-wallets).
 
-## Getting Started
+We avoid using Solana Wallet Adapters not only because they're Solana-specific. Many (all?) of them were written with @solana/web3.js v1 and haven't been updated/maintained, while we're trying to use v2.
 
-First, run the development server:
+While we try to be chain-agnostic as much as possible, looking up balances and creating transactions will unavoidably be chain-specific. We try to factor out all Solana-specific code into the `/lib/solana.ts` file.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Development
+It's a Next.js app (`create-next-app`) that you can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+After connecting to a wallet, the app remembers the connection by storing it in the browser's local storage. You can delete that memory by going to the `/reset` page.
