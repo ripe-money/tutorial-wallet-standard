@@ -10,18 +10,31 @@ import { useWallets } from '@wallet-standard/react';
 
 import { connectUiWallet as _connectUiWallet } from '../lib/wallet-standard';
 
+// https://github.com/wallet-standard/wallet-standard/blob/master/packages/core/base/src/identifier.ts
+import type { IdentifierString } from "@wallet-standard/core";
+const isIdentifierString = (value: string): value is IdentifierString => value.includes(':');
+
 const STORAGE_KEY = 'ripe:connected-wallet';
 const saveWallet = (wallet: UiWallet) => {
-  localStorage.setItem(STORAGE_KEY, wallet.name);
+  // Wallet name doesn't uniquely identify a wallet.
+  // E.g. "Phantom" injects multiple wallets (Solana, Bitcoin, Sui, etc.)
+  // Each injected wallet has multiple chains, but they're basically mainnet and various testnets.
+  // AFAIK, the first chain is always the mainnet, so this key should be unique enough.
+  const storedWalletKey = `${wallet.chains[0]}@${wallet.name}`;
+  localStorage.setItem(STORAGE_KEY, storedWalletKey);
 }
 const loadWallet = (availableWallets: readonly UiWallet[]) => {
-  const storedWalletName = localStorage.getItem(STORAGE_KEY);
-  if (!storedWalletName) return undefined;
+  const storedWalletKey = localStorage.getItem(STORAGE_KEY);
+  if (!storedWalletKey) return;
 
-  const wallet = availableWallets.find((w: UiWallet) => w.name === storedWalletName);
-  if (!wallet) return undefined;
+  const [chain, walletName] = storedWalletKey.split('@');
+  if (!chain || !walletName || !isIdentifierString(chain)) {
+    return console.error('Invalid wallet key format:', storedWalletKey);
+  }
 
-  return wallet;
+  return availableWallets.find((w: UiWallet) =>
+    w.name === walletName && w.chains.includes(chain)
+  );
 }
 
 const ConnectedAccountContext = createContext<{
