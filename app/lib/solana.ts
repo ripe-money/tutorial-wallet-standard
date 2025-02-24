@@ -36,3 +36,7 @@ export const getSolUsdcBalance = async (account: WalletAccount) => {
 
 //   return lamports;
 // };
+
+export const sendSolUsdcFrom = async (account: WalletAccount) => {
+  console.log('Sending 0.01 USDC from', account.features);
+};

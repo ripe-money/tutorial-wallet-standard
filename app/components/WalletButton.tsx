@@ -12,12 +12,12 @@ export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>)
 
   return (
     <button
-      className="btn btn-primary m-2"
+      className="btn btn-primary my-2"
       disabled={!isSolanaWallet(wallet)}
       onClick={() => connectUiWallet(wallet)}
     >
-    {wallet.name}&nbsp;
-    ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
+      {wallet.name}&nbsp;
+      ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})
     </button>
   );
 }
