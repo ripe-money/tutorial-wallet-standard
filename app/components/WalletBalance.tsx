@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 
-import ConnectedAccountContext from '../context/ConnectedAccountContext';
+import ConnectedWalletContext from '../context/ConnectedAccountContext';
 import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
 
 const WalletBalance = () => {
-  const { connectedAccount } = useContext(ConnectedAccountContext);
+  const { connectedAccount } = useContext(ConnectedWalletContext);
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
@@ -23,7 +23,9 @@ const WalletBalance = () => {
             ? 'Loading balance...'
             : (<>
                 {formatAddress(connectedAccount.address)} has {formatBalance(balance)} USDC
-                <button className="btn btn-primary my-2" onClick={() => sendSolUsdcFrom(connectedAccount)}>
+                <button className="btn btn-primary my-2"
+                  onClick={() => sendSolUsdcFrom(connectedAccount)}
+                >
                   Send 0.01 USDC
                 </button>
               </>)
