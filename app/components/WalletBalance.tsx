@@ -9,13 +9,13 @@ const WalletBalance = () => {
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (connectedWallet) {
-      getWalletAddress(connectedWallet)
-        .then(address => setWalletAddress(address))
-        // .then(() => getSolBalance(connectedWallet))
-        .then(() => getSolUsdcBalance(connectedWallet))
-        .then(balance => setBalance(balance));
-    }
+    if (!connectedWallet) return;
+
+    getWalletAddress(connectedWallet)
+      .then(address => setWalletAddress(address))
+      // .then(() => getSolBalance(connectedWallet))
+      .then(() => getSolUsdcBalance(connectedWallet))
+      .then(balance => setBalance(balance));
   }, [connectedWallet]);
 
   return (
