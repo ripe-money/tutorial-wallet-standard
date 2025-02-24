@@ -39,7 +39,7 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
     if (connectedAccount) return; // already connected
 
     const wallet = loadWallet(availableWallets);
-    if (!wallet) return; // The wallet may not be available yet.
+    if (!wallet) return; // The wallet may not be available (injected into our environment) yet.
 
     console.log('Reconnecting to previous wallet:', wallet);
     _connectUiWallet({ wallet, silent: true });
@@ -47,7 +47,8 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
 
   const connectUiWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
-    _connectUiWallet({ wallet }).then(() => saveWallet(wallet));
+    _connectUiWallet({ wallet })
+      .then(() => saveWallet(wallet));
   };
 
   return (
