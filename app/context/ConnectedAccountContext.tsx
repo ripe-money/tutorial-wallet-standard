@@ -53,11 +53,11 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
   // Connect to a wallet using the Standard Connect feature.
   // I.e., the wallet is assumed to support the "standard:connect" feature.
   type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect];
-  const _connectUiWallet = useCallback((wallet: UiWallet) => {
+  const _connectUiWallet = useCallback(({ wallet, silent = false }: { wallet: UiWallet, silent?: boolean }) => {
     return (getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType)
-      .connect()
+      .connect({ silent })
       .then(({ accounts }) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
-      .catch((error) => console.error(`Error connecting to ${wallet.name}:`, error));
+      .catch((error) => console.log(`Error connecting to ${wallet.name}:`, error));
   }, []);
 
   useEffect(() => {
@@ -67,12 +67,12 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
     if (!wallet) return; // The wallet may not be available yet.
 
     console.log('Reconnecting to previous wallet:', wallet);
-    _connectUiWallet(wallet);
+    _connectUiWallet({ wallet, silent: true });
   }, [_connectUiWallet, availableWallets, connectedAccount]);
 
   const connectUiWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
-    _connectUiWallet(wallet).then(() => saveWallet(wallet));
+    _connectUiWallet({ wallet }).then(() => saveWallet(wallet));
   };
 
   return (
