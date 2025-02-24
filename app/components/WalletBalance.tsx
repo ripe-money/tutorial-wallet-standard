@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 
 import ConnectedWalletContext from '../context/ConnectedWalletContext';
-import { getSolUsdcBalance, sendSolUsdcFrom, getSolBalance } from '../lib/solana';
+import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
 
 const WalletBalance = () => {
   const { connectedWallet } = useContext(ConnectedWalletContext);
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (connectedWallet && connectedWallet.accounts.length > 0) {
-      getSolBalance(connectedWallet);
+    if (connectedWallet) {
+      // getSolBalance(connectedWallet);
       getSolUsdcBalance(connectedWallet).then(balance => setBalance(balance));
     }
   }, [connectedWallet]);
@@ -17,12 +17,12 @@ const WalletBalance = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {!connectedWallet || connectedWallet.accounts.length == 0
+        {!connectedWallet
           ? 'No wallet connected'
           : (balance === null
             ? 'Loading balance...'
             : (<>
-                {formatAddress(connectedWallet.accounts[0].address)} has {formatBalance(balance)} USDC
+                {/* formatAddress(connectedWallet.accounts[0].address)} has */formatBalance(balance)} USDC
                 <button className="btn btn-primary my-2"
                   onClick={() => sendSolUsdcFrom(connectedWallet)}
                 >
@@ -36,9 +36,9 @@ const WalletBalance = () => {
   );
 };
 
-const formatAddress = (address: string) => {
-  return `${address.slice(0, 4)}...${address.slice(-4)}`;
-}
+// const formatAddress = (address: string) => {
+//   return `${address.slice(0, 4)}...${address.slice(-4)}`;
+// }
 
 const formatBalance = (balance: number) => {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(balance);
