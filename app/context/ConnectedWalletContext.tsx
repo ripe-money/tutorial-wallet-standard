@@ -1,7 +1,5 @@
 import { createContext, useCallback, useEffect, useState, type ReactNode } from 'react';
 
-// https://github.com/wallet-standard/wallet-standard/blob/master/packages/core/base/src/wallet.ts
-import type { WalletAccount } from "@wallet-standard/core";
 import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
@@ -14,15 +12,15 @@ import { useWallets } from '@wallet-standard/react';
 import { saveWallet, loadWallet } from '../lib/localStore';
 
 const ConnectedWalletContext = createContext<{
-  connectedAccount: WalletAccount | undefined;
+  connectedWallet: UiWallet | undefined;
   connectUiWallet: (wallet: UiWallet) => void;
 }>({
-  connectedAccount: undefined,
+  connectedWallet: undefined,
   connectUiWallet: () => console.error('connectUiWallet not implemented'),
 });
 
 const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
-  const [connectedAccount, setConnectedAccount] = useState<WalletAccount | undefined>(undefined);
+  const [connectedWallet, setConnectedWallet] = useState<UiWallet | undefined>(undefined);
   const availableWallets = useWallets();
 
   // Connect to a wallet using the Standard Connect feature.
@@ -31,19 +29,20 @@ const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) =
   const _connectUiWallet = useCallback(({ wallet, silent = false }: { wallet: UiWallet, silent?: boolean }) => {
     return (getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType)
       .connect({ silent })
-      .then(({ accounts }) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
+      .then(() => setConnectedWallet(wallet))
+      // .then(({ accounts }) => {if (accounts.length > 0) setConnectedWallet(accounts[0])})
       .catch((error) => console.log(`Error connecting to ${wallet.name}:`, error));
   }, []);
 
   useEffect(() => {
-    if (connectedAccount) return; // already connected
+    if (connectedWallet && connectedWallet.accounts.length > 0) return; // already connected
 
     const wallet = loadWallet(availableWallets);
     if (!wallet) return; // The wallet may not be available (injected into our environment) yet.
 
     console.log('Reconnecting to previous wallet:', wallet);
     _connectUiWallet({ wallet, silent: true });
-  }, [_connectUiWallet, availableWallets, connectedAccount]);
+  }, [_connectUiWallet, availableWallets, connectedWallet]);
 
   const connectUiWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
@@ -52,7 +51,7 @@ const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) =
   };
 
   return (
-    <ConnectedWalletContext.Provider value={{ connectedAccount, connectUiWallet }}>
+    <ConnectedWalletContext.Provider value={{ connectedWallet: connectedWallet, connectUiWallet }}>
       {children}
     </ConnectedWalletContext.Provider>
   );
