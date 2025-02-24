@@ -1,14 +1,15 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useEffect, useState, type ReactNode } from 'react';
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/core/base/src/wallet.ts
 import type { WalletAccount } from "@wallet-standard/core";
+import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
+
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
 import type { UiWallet } from '@wallet-standard/react';
-
+// https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
+import { getWalletFeature } from '@wallet-standard/react';
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
 import { useWallets } from '@wallet-standard/react';
-
-import { connectUiWallet as _connectUiWallet } from '../lib/wallet-standard';
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/core/base/src/identifier.ts
 import type { IdentifierString } from "@wallet-standard/core";
@@ -49,30 +50,29 @@ const ConnectedAccountContextProvider = ({ children }: { children: ReactNode }) 
   const [connectedAccount, setConnectedAccount] = useState<WalletAccount | undefined>(undefined);
   const availableWallets = useWallets();
 
+  // Connect to a wallet using the Standard Connect feature.
+  // I.e., the wallet is assumed to support the "standard:connect" feature.
+  type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect];
+  const _connectUiWallet = useCallback((wallet: UiWallet) => {
+    return (getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType)
+      .connect()
+      .then(({ accounts }) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
+      .catch((error) => console.error(`Error connecting to ${wallet.name}:`, error));
+  }, []);
+
   useEffect(() => {
     if (connectedAccount) return; // already connected
 
     const wallet = loadWallet(availableWallets);
     if (!wallet) return; // The wallet may not be available yet.
 
-    console.log('Found wallet:', wallet);
-
-    _connectUiWallet(wallet)
-      .then((accounts) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
-      .catch((error) => {
-        console.error(`Error connecting to ${wallet.name}:`, error);
-      });
-  }, [availableWallets, connectedAccount]);
+    console.log('Reconnecting to previous wallet:', wallet);
+    _connectUiWallet(wallet);
+  }, [_connectUiWallet, availableWallets, connectedAccount]);
 
   const connectUiWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
-
-    _connectUiWallet(wallet)
-      .then((accounts) => {if (accounts.length > 0) setConnectedAccount(accounts[0])})
-      .catch((error) => {
-        console.error(`Error connecting to ${wallet.name}:`, error);
-      })
-      .then(() => saveWallet(wallet));
+    _connectUiWallet(wallet).then(() => saveWallet(wallet));
   };
 
   return (
