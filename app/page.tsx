@@ -22,8 +22,8 @@ const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 */
 
 import { ConnectedAccountContextProvider } from './context/ConnectedAccountContext';
-import WalletBalance from './WalletBalance';
-import WalletList from './WalletList';
+import WalletBalance from './components/WalletBalance';
+import WalletList from './components/WalletList';
 
 export default function Home() {
   // Register adapters for wallets that don't natively support Wallet Standard
