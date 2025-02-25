@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useEffect, useState, type ReactNode } from 'react';
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
 import type { UiWallet } from '@wallet-standard/react';
@@ -19,25 +19,18 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
   const [selectedWallet, setSelectedWallet] = useState<UiWallet | undefined>(undefined);
   const availableWallets = useWallets();
 
-  // Connect to a wallet using the Standard Connect feature.
-  // I.e., the wallet is assumed to support the "standard:connect" feature.
-  const _connectWallet = useCallback(({ wallet }: { wallet: UiWallet }) => {
-    setSelectedWallet(wallet);
-  }, []);
-
+  // Re-selecting previously selected wallet, which was recorded in localStorage.
   useEffect(() => {
-    if (selectedWallet) return; // already connected
+    if (selectedWallet) return;
 
     const wallet = loadWallet(availableWallets);
     if (!wallet) return; // The wallet may not be available (injected into our environment) yet.
 
-    console.log('Reconnecting to previous wallet:', wallet);
-    _connectWallet({ wallet });
-  }, [_connectWallet, availableWallets, selectedWallet]);
+    setSelectedWallet(wallet);
+  }, [availableWallets, selectedWallet]);
 
   const selectWallet = (wallet: UiWallet) => {
-    console.log('Connecting to wallet:', wallet.name);
-    _connectWallet({ wallet })
+    setSelectedWallet(wallet)
     saveWallet(wallet);
   };
 
