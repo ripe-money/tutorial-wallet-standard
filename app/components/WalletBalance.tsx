@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 
-import ConnectedWalletContext from '../context/SelectedWalletContext';
+import SelectedWalletContext from '../context/SelectedWalletContext';
 import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
 import { getWalletAddress } from '../lib/wallet-standard';
 
 const WalletBalance = () => {
-  const { connectedWallet } = useContext(ConnectedWalletContext);
+  const { connectedWallet } = useContext(SelectedWalletContext);
   const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
   const [balance, setBalance] = useState<number | null>(null);
 

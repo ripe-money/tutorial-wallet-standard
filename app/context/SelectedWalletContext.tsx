@@ -7,7 +7,7 @@ import { useWallets } from '@wallet-standard/react';
 
 import { saveWallet, loadWallet } from '../lib/localStore';
 
-const ConnectedWalletContext = createContext<{
+const SelectedWalletContext = createContext<{
   connectedWallet: UiWallet | undefined;
   connectWallet: (wallet: UiWallet) => void;
 }>({
@@ -42,11 +42,11 @@ const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) =
   };
 
   return (
-    <ConnectedWalletContext.Provider value={{ connectedWallet, connectWallet }}>
+    <SelectedWalletContext.Provider value={{ connectedWallet, connectWallet }}>
       {children}
-    </ConnectedWalletContext.Provider>
+    </SelectedWalletContext.Provider>
   );
 }
 
-export default ConnectedWalletContext;
+export default SelectedWalletContext;
 export { ConnectedWalletContextProvider };
