@@ -15,7 +15,7 @@ const SelectedWalletContext = createContext<{
   connectWallet: () => console.error('connectWallet not implemented'),
 });
 
-const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
+const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
   const [connectedWallet, setConnectedWallet] = useState<UiWallet | undefined>(undefined);
   const availableWallets = useWallets();
 
@@ -49,4 +49,4 @@ const ConnectedWalletContextProvider = ({ children }: { children: ReactNode }) =
 }
 
 export default SelectedWalletContext;
-export { ConnectedWalletContextProvider };
+export { SelectedWalletContextProvider };
