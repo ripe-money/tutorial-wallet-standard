@@ -8,13 +8,13 @@ import SelectedWalletContext from '../context/SelectedWalletContext';
 import { isSolanaWallet } from '../lib/solana';
 
 export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
-  const { connectWallet } = useContext(SelectedWalletContext);
+  const { selectWallet } = useContext(SelectedWalletContext);
 
   return (
     <button
       className="btn btn-primary my-2"
       disabled={!isSolanaWallet(wallet)}
-      onClick={() => connectWallet(wallet)}
+      onClick={() => selectWallet(wallet)}
     >
       {wallet.name}&nbsp;
       ({wallet.chains[0].split(':')[0] /* Pull out the chain name */})

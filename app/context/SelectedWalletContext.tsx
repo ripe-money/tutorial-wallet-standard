@@ -9,20 +9,20 @@ import { saveWallet, loadWallet } from '../lib/localStore';
 
 const SelectedWalletContext = createContext<{
   selectedWallet: UiWallet | undefined;
-  connectWallet: (wallet: UiWallet) => void;
+  selectWallet: (wallet: UiWallet) => void;
 }>({
   selectedWallet: undefined,
-  connectWallet: () => console.error('connectWallet not implemented'),
+  selectWallet: () => console.error('selectWallet not implemented'),
 });
 
 const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedWallet, setConnectedWallet] = useState<UiWallet | undefined>(undefined);
+  const [selectedWallet, setSelectedWallet] = useState<UiWallet | undefined>(undefined);
   const availableWallets = useWallets();
 
   // Connect to a wallet using the Standard Connect feature.
   // I.e., the wallet is assumed to support the "standard:connect" feature.
   const _connectWallet = useCallback(({ wallet }: { wallet: UiWallet }) => {
-    setConnectedWallet(wallet);
+    setSelectedWallet(wallet);
   }, []);
 
   useEffect(() => {
@@ -35,14 +35,14 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
     _connectWallet({ wallet });
   }, [_connectWallet, availableWallets, selectedWallet]);
 
-  const connectWallet = (wallet: UiWallet) => {
+  const selectWallet = (wallet: UiWallet) => {
     console.log('Connecting to wallet:', wallet.name);
     _connectWallet({ wallet })
     saveWallet(wallet);
   };
 
   return (
-    <SelectedWalletContext.Provider value={{ selectedWallet, connectWallet }}>
+    <SelectedWalletContext.Provider value={{ selectedWallet, selectWallet }}>
       {children}
     </SelectedWalletContext.Provider>
   );
