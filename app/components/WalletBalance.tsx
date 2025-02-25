@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 
-import ConnectedWalletContext from '../context/ConnectedWalletContext';
+import ConnectedWalletContext from '../context/SelectedWalletContext';
 import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
 import { getWalletAddress } from '../lib/wallet-standard';
 
