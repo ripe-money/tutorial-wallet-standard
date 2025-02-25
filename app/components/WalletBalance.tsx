@@ -5,31 +5,31 @@ import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
 import { getWalletAddress } from '../lib/wallet-standard';
 
 const WalletBalance = () => {
-  const { connectedWallet } = useContext(SelectedWalletContext);
+  const { selectedWallet } = useContext(SelectedWalletContext);
   const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!connectedWallet) return;
+    if (!selectedWallet) return;
 
-    getWalletAddress(connectedWallet)
+    getWalletAddress(selectedWallet)
       .then(address => setWalletAddress(address))
-      // .then(() => getSolBalance(connectedWallet))
-      .then(() => getSolUsdcBalance(connectedWallet))
+      // .then(() => getSolBalance(selectedWallet))
+      .then(() => getSolUsdcBalance(selectedWallet))
       .then(balance => setBalance(balance));
-  }, [connectedWallet]);
+  }, [selectedWallet]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {!connectedWallet
-          ? 'No wallet connected'
+        {!selectedWallet
+          ? 'No wallet selected'
           : (balance === null || walletAddress === undefined)
             ? 'Loading balance...'
             : (<>
                 {formatAddress(walletAddress)} has {formatBalance(balance)} USDC
                 <button className="btn btn-primary my-2"
-                  onClick={() => sendSolUsdcFrom(connectedWallet)}
+                  onClick={() => sendSolUsdcFrom(selectedWallet)}
                 >
                   Send 0.01 USDC
                 </button>

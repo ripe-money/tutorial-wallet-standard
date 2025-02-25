@@ -5,7 +5,7 @@ import type { UiWallet } from '@wallet-standard/react';
 import type { IdentifierString } from "@wallet-standard/core";
 const isIdentifierString = (value: string): value is IdentifierString => value.includes(':');
 
-const STORAGE_KEY = 'ripe:connected-wallet';
+const STORAGE_KEY = 'ripe:selected-wallet';
 interface StoredWalletKeyObj {
   walletName: string;
   mainChain: IdentifierString;
