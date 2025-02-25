@@ -7,11 +7,13 @@ import { address, createSolanaRpc } from '@solana/web3.js';
 const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
+import { getWalletAddress } from './wallet-standard';
+
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
   createSolanaRpc('https://sibylla-ghbj3j-fast-mainnet.helius-rpc.com');
 
 // Get the USDC balance of a Solana wallet
-export const getSolUsdcBalance = async (wallet: UiWallet) => {
+const getSolUsdcBalance = async (wallet: UiWallet) => {
   console.log('Getting USDC balance for', wallet);
 
   const walletAddress = await getWalletAddress(wallet);
@@ -28,7 +30,7 @@ export const getSolUsdcBalance = async (wallet: UiWallet) => {
 
 // // Get the SOL balance of a Solana wallet
 // // Not needed for our app, but keeping it here to test it occasionally.
-// export const getSolBalance = async (wallet: UiWallet) => {
+// const getSolBalance = async (wallet: UiWallet) => {
 //   console.log('Getting SOL balance for', wallet);
 
 //   const walletAddress = await getWalletAddress(wallet);
@@ -46,31 +48,8 @@ export const getSolUsdcBalance = async (wallet: UiWallet) => {
 //   return lamports;
 // };
 
-export const sendSolUsdcFrom = async (wallet: UiWallet) => {
+const sendSolUsdcFrom = async (wallet: UiWallet) => {
   console.log('Sending 0.01 USDC from', wallet.features);
 };
 
-// https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
-import { getWalletFeature } from '@wallet-standard/react';
-import { StandardConnect, type StandardConnectFeature } from '@wallet-standard/core';
-type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect];
-const connectWallet = async ({
-  wallet,
-  // Default to not bother user with permission prompt.
-  // Set to false only when the action is user-initiated, e.g. clicking a button.
-  silent = true,
-}: {
-  wallet: UiWallet,
-  silent?: boolean,
-}) => {
-  const { accounts } = await (getWalletFeature(wallet, StandardConnect) as StandardConnectFeatureType)
-    .connect({ silent })
-  return accounts;
-};
-
-export const getWalletAddress = async (wallet: UiWallet) => {
-  const accounts = await connectWallet({ wallet });
-  if (accounts.length === 0) return;
-
-  return accounts[0].address;
-};
+export { getSolUsdcBalance, sendSolUsdcFrom };
