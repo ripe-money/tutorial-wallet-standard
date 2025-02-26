@@ -8,8 +8,9 @@ export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLAN
 
 import { getWalletAddress } from './wallet-standard';
 
+console.log(process.env.NEXT_PUBLIC_SOLANA_RPC)
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
-  createSolanaRpc('https://sibylla-ghbj3j-fast-mainnet.helius-rpc.com');
+  createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
 
 // Get the USDC balance of a Solana wallet
 const getSolUsdcBalance = async (wallet: UiWallet) => {
@@ -20,7 +21,7 @@ const getSolUsdcBalance = async (wallet: UiWallet) => {
 
   const { value } = await rpc.getTokenAccountsByOwner(
     address(walletAddress),
-    { mint: address('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') }, // USDC
+    { mint: address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!) },
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
 
