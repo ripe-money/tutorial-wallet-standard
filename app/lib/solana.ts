@@ -48,8 +48,4 @@ const getSolUsdcBalance = async (wallet: UiWallet) => {
 //   return lamports;
 // };
 
-const sendSolUsdcFrom = async (wallet: UiWallet) => {
-  console.log('Sending 0.01 USDC from', wallet.features);
-};
-
-export { getSolUsdcBalance, sendSolUsdcFrom };
+export { getSolUsdcBalance };

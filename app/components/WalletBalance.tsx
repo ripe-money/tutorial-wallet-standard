@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
-import { getSolUsdcBalance, sendSolUsdcFrom } from '../lib/solana';
+import { getSolUsdcBalance } from '../lib/solana';
 import { getWalletAddress } from '../lib/wallet-standard';
+
+import { SendSplButton } from './SendSplButton';
 
 const WalletBalance = () => {
   const { selectedWallet } = useContext(SelectedWalletContext);
@@ -28,11 +30,7 @@ const WalletBalance = () => {
             ? 'Loading balance...'
             : (<>
                 {formatAddress(walletAddress)} has {formatBalance(balance)} USDC
-                <button className="btn btn-primary my-2"
-                  onClick={() => sendSolUsdcFrom(selectedWallet)}
-                >
-                  Send 0.01 USDC
-                </button>
+                <SendSplButton wallet={selectedWallet} />
               </>)
         }
       </h1>
