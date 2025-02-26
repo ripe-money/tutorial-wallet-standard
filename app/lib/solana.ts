@@ -3,8 +3,7 @@ import type { UiWallet } from "@wallet-standard/react";
 import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
 import { address, createSolanaRpc } from '@solana/web3.js';
 
-// import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
-const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
+import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
 import { getWalletAddress } from './wallet-standard';
