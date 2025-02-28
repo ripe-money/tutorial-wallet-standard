@@ -9,17 +9,6 @@ type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeatu
 
 import { getLatestBlockhash } from '../lib/solana';
 
-export const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
-  return (
-    <button
-      className="btn btn-primary"
-      onClick={() => sendSolUsdcFrom(wallet)}
-    >
-      Send 0.01 USDC
-    </button>
-  );
-};
-
 const sendSolUsdcFrom = async (wallet: UiWallet) => {
   console.log('latest block hash:', await getLatestBlockhash());
   console.log('Sending 0.01 USDC from', wallet.features);
@@ -37,4 +26,15 @@ const sendSolUsdcFrom = async (wallet: UiWallet) => {
   //   authority: address('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'),
   // });
   // console.log('Instruction:', instr, typeof instr);
+};
+
+export const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
+  return (
+    <button
+      className="btn btn-primary"
+      onClick={() => sendSolUsdcFrom(wallet)}
+    >
+      Send 0.01 USDC
+    </button>
+  );
 };
