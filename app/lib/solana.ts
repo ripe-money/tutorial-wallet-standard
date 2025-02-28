@@ -1,6 +1,6 @@
 import type { UiWallet } from "@wallet-standard/react";
 
-import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
+import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/web3.js';
 import { address, createSolanaRpc } from '@solana/web3.js';
 
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
@@ -9,8 +9,13 @@ export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLAN
 import { getWalletAddress } from './wallet-standard';
 
 console.log(process.env.NEXT_PUBLIC_SOLANA_RPC)
-const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
+const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi> =
   createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
+
+const getLatestBlockhash = async () => {
+  const { value: blockhash } = await rpc.getLatestBlockhash().send();
+  return blockhash;
+};
 
 // Get the USDC balance of a Solana wallet
 const getSolUsdcBalance = async (wallet: UiWallet) => {
@@ -48,4 +53,4 @@ const getSolUsdcBalance = async (wallet: UiWallet) => {
 //   return lamports;
 // };
 
-export { getSolUsdcBalance };
+export { getLatestBlockhash, getSolUsdcBalance };

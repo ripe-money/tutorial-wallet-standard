@@ -7,6 +7,8 @@ type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeatu
 
 // import { getTransferInstruction } from '@solana-program/token';
 
+import { getLatestBlockhash } from '../lib/solana';
+
 export const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
   return (
     <button
@@ -19,6 +21,7 @@ export const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
 };
 
 const sendSolUsdcFrom = async (wallet: UiWallet) => {
+  console.log('latest block hash:', await getLatestBlockhash());
   console.log('Sending 0.01 USDC from', wallet.features);
   const feature = getWalletFeature(wallet, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
   console.log('Feature:', feature.signAndSendTransaction);
