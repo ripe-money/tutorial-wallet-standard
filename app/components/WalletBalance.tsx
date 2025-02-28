@@ -1,29 +1,38 @@
 import { useContext, useEffect, useState } from 'react';
 
-import ConnectedAccountContext from '../context/ConnectedAccountContext';
+import SelectedWalletContext from '../context/SelectedWalletContext';
 import { getSolUsdcBalance } from '../lib/solana';
+import { getWalletAddress } from '../lib/wallet-standard';
+
+import { SendSplButton } from './SendSplButton';
 
 const WalletBalance = () => {
-  const { connectedAccount } = useContext(ConnectedAccountContext);
+  const { selectedWallet } = useContext(SelectedWalletContext);
+  const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (connectedAccount) {
-      console.log('Fetching balance for account:', connectedAccount);
+    if (!selectedWallet) return;
 
-      // getSolBalance(connectedAccount);
-      getSolUsdcBalance(connectedAccount).then(balance => setBalance(balance));
-    }
-  }, [connectedAccount]);
+    getWalletAddress(selectedWallet)
+      .then(address => setWalletAddress(address))
+      // .then(() => getSolBalance(selectedWallet))
+      .then(() => getSolUsdcBalance(selectedWallet))
+      .then(balance => setBalance(balance));
+  }, [selectedWallet]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {!connectedAccount
-          ? 'No account connected'
-          : (balance === null
+        {!selectedWallet
+          ? 'No wallet selected'
+          : (balance === null || walletAddress === undefined)
             ? 'Loading balance...'
-            : `${formatAddress(connectedAccount.address)} has ${formatBalance(balance)} USDC`)}
+            : (<>
+                {formatAddress(walletAddress)} has {formatBalance(balance)} USDC
+                <SendSplButton wallet={selectedWallet} />
+              </>)
+        }
       </h1>
     </div>
   );

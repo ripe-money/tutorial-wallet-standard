@@ -1,32 +1,48 @@
-import type { WalletAccount } from "@wallet-standard/core";
 import type { UiWallet } from "@wallet-standard/react";
 
-import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi } from '@solana/web3.js';
+import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/web3.js';
 import { address, createSolanaRpc } from '@solana/web3.js';
 
-// import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
-const SOLANA_MAINNET_CHAIN = 'solana:mainnet';
+import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
-const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi> =
-  createSolanaRpc('https://sibylla-ghbj3j-fast-mainnet.helius-rpc.com');
+import { getWalletAddress } from './wallet-standard';
 
-// Get the USDC balance of a Solana account
-export const getSolUsdcBalance = async (account: WalletAccount) => {
+console.log(process.env.NEXT_PUBLIC_SOLANA_RPC)
+const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi> =
+  createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
+
+const getLatestBlockhash = async () => {
+  const { value: blockhash } = await rpc.getLatestBlockhash().send();
+  return blockhash;
+};
+
+// Get the USDC balance of a Solana wallet
+const getSolUsdcBalance = async (wallet: UiWallet) => {
+  console.log('Getting USDC balance for', wallet);
+
+  const walletAddress = await getWalletAddress(wallet);
+  if (!walletAddress) return 0;
+
   const { value } = await rpc.getTokenAccountsByOwner(
-    address(account.address),
-    { mint: address('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v') }, // USDC
+    address(walletAddress),
+    { mint: address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!) },
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
 
   return value[0]?.account.data.parsed.info.tokenAmount.uiAmount || 0;
 };
 
-// // Get the SOL balance of a Solana account
-// // Not needed for our app, but keeping it here for reference
-// export const getSolBalance = async (account: WalletAccount) => {
+// // Get the SOL balance of a Solana wallet
+// // Not needed for our app, but keeping it here to test it occasionally.
+// const getSolBalance = async (wallet: UiWallet) => {
+//   console.log('Getting SOL balance for', wallet);
+
+//   const walletAddress = await getWalletAddress(wallet);
+//   if (!walletAddress) return;
+
 //   const { value: lamports } =
-//     await rpc.getBalance(address(account.address), { commitment: 'confirmed' }).send();
+//     await rpc.getBalance(address(walletAddress), { commitment: 'confirmed' }).send();
 
 //   const formattedValue = new Intl.NumberFormat(undefined, { maximumFractionDigits: 5 }).format(
 //     // @ts-expect-error This format string is 100% allowed now.
@@ -36,3 +52,5 @@ export const getSolUsdcBalance = async (account: WalletAccount) => {
 
 //   return lamports;
 // };
+
+export { getLatestBlockhash, getSolUsdcBalance };

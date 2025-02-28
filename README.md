@@ -8,4 +8,4 @@ While we try to be chain-agnostic as much as possible, looking up balances and c
 ## Development
 It's a Next.js app (`create-next-app`) that you can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
 
-After connecting to a wallet, the app remembers the connection by storing it in the browser's local storage. You can delete that memory by going to the `/reset` page.
+After selecting to a wallet, the app remembers the selection by storing it in the browser's local storage. You can delete that memory by going to the `/reset` page.
