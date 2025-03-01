@@ -4,39 +4,37 @@ import type { WalletAccount } from '@wallet-standard/core';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
 import solana from '../lib/solana';
-import { getAccount } from '../lib/wallet-standard';
 
 import { SendSplButton } from './SendSplButton';
 
 const WalletBalance = () => {
-  const { selectedWallet } = useContext(SelectedWalletContext);
+  const { getWalletAccount } = useContext(SelectedWalletContext);
   const [account, setAccount] = useState<WalletAccount | undefined>(undefined);
+
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!selectedWallet) return;
+    const updateBalance = async () => {
+      const account = await getWalletAccount();
+      if (!account) return;
 
-    getAccount(selectedWallet)
-      .then(account => {
-        if (!account) return;
-
-        setAccount(account);
-        solana.getSolBalance(account);
-        solana.getUsdcBalance(account)
-          .then(balance => setBalance(balance));
-      });
-  }, [selectedWallet]);
+      setAccount(account);
+      solana.getSolBalance(account);
+      solana.getUsdcBalance(account).then(balance => setBalance(balance));
+    };
+    updateBalance();
+  }, [getWalletAccount]);
 
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        {!selectedWallet
-          ? 'No wallet selected'
-          : (balance === null || account === undefined)
+        {!account
+          ? 'No wallet connected'
+          : balance === null
             ? 'Loading balance...'
             : (<>
                 {formatAddress(account.address)} has {formatBalance(balance)} USDC
-                <SendSplButton wallet={selectedWallet} />
+                <SendSplButton />
               </>)
         }
       </h1>
