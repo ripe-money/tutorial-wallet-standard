@@ -28,11 +28,11 @@ const sendSolUsdcFrom = async (wallet: UiWallet) => {
   // console.log('Instruction:', instr, typeof instr);
 };
 
-export const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
+export const SendSplButton = ({ wallet }: { wallet?: UiWallet }) => {
   return (
     <button
       className="btn btn-primary"
-      onClick={() => sendSolUsdcFrom(wallet)}
+      onClick={() => console.log(wallet)}
     >
       Send 0.01 USDC
     </button>
