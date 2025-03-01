@@ -12,9 +12,11 @@ import { getAccount } from '../lib/wallet-standard';
 const SelectedWalletContext = createContext<{
   getWalletAccount: () => Promise<WalletAccount | undefined>;
   selectWallet: (wallet: UiWallet) => void;
+  selectedWallet?: UiWallet;
 }>({
   getWalletAccount: () => Promise.resolve(undefined),
   selectWallet: () => console.error('selectWallet not implemented'),
+  selectedWallet: undefined,
 });
 
 const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) => {
@@ -42,7 +44,7 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
   };
 
   return (
-    <SelectedWalletContext.Provider value={{ selectWallet, getWalletAccount }}>
+    <SelectedWalletContext.Provider value={{ selectWallet, getWalletAccount, selectedWallet }}>
       {children}
     </SelectedWalletContext.Provider>
   );
