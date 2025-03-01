@@ -1,3 +1,4 @@
+import type { WalletAccount } from "@wallet-standard/core";
 import type { UiWallet } from "@wallet-standard/react";
 
 import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
@@ -6,26 +7,21 @@ import { address, createSolanaRpc } from '@solana/kit';
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
-import { getWalletAddress } from './wallet-standard';
-
 console.log(process.env.NEXT_PUBLIC_SOLANA_RPC)
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi> =
   createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
 
-const getLatestBlockhash = async () => {
+export const getLatestBlockhash = async () => {
   const { value: blockhash } = await rpc.getLatestBlockhash().send();
   return blockhash;
 };
 
-// Get the USDC balance of a Solana wallet
-const getSolUsdcBalance = async (wallet: UiWallet) => {
-  console.log('Getting USDC balance for', wallet);
-
-  const walletAddress = await getWalletAddress(wallet);
-  if (!walletAddress) return 0;
+// Get the USDC balance of a Solana wallet account
+export const getSolUsdcBalance = async (account: WalletAccount) => {
+  console.log('Getting USDC balance for', account);
 
   const { value } = await rpc.getTokenAccountsByOwner(
-    address(walletAddress),
+    address(account.address),
     { mint: address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!) },
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
@@ -52,5 +48,3 @@ const getSolUsdcBalance = async (wallet: UiWallet) => {
 
 //   return lamports;
 // };
-
-export { getLatestBlockhash, getSolUsdcBalance };

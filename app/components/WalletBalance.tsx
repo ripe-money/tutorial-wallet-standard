@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
 import { getSolUsdcBalance } from '../lib/solana';
-import { getWalletAddress } from '../lib/wallet-standard';
+import { getAccount } from '../lib/wallet-standard';
 
 import { SendSplButton } from './SendSplButton';
 
@@ -14,11 +14,15 @@ const WalletBalance = () => {
   useEffect(() => {
     if (!selectedWallet) return;
 
-    getWalletAddress(selectedWallet)
-      .then(address => setWalletAddress(address))
-      // .then(() => getSolBalance(selectedWallet))
-      .then(() => getSolUsdcBalance(selectedWallet))
-      .then(balance => setBalance(balance));
+    getAccount(selectedWallet)
+      .then(account => {
+        if (!account) return;
+
+        setWalletAddress(account.address);
+        // getSolBalance(selectedWallet);
+        getSolUsdcBalance(account)
+          .then(balance => setBalance(balance));
+      });
   }, [selectedWallet]);
 
   return (
