@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
-import { getSolUsdcBalance } from '../lib/solana';
+import solana from '../lib/solana';
 import { getAccount } from '../lib/wallet-standard';
 
 import { SendSplButton } from './SendSplButton';
@@ -19,8 +19,8 @@ const WalletBalance = () => {
         if (!account) return;
 
         setWalletAddress(account.address);
-        // getSolBalance(selectedWallet);
-        getSolUsdcBalance(account)
+        solana.getSolBalance(account);
+        solana.getUsdcBalance(account)
           .then(balance => setBalance(balance));
       });
   }, [selectedWallet]);
