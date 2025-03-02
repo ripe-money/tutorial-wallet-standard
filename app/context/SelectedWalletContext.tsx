@@ -7,7 +7,7 @@ import type { UiWallet } from '@wallet-standard/react';
 import { useWallets } from '@wallet-standard/react';
 
 import { saveWallet, loadWallet } from '../lib/localStore';
-import { getAccount } from '../lib/wallet-standard';
+import { connectWallet, getAccount } from '../lib/wallet-standard';
 
 const SelectedWalletContext = createContext<{
   getWalletAccount: () => Promise<WalletAccount | undefined>;
@@ -34,8 +34,11 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
   }, [availableWallets, selectedWallet]);
 
   const selectWallet = (wallet: UiWallet) => {
-    setSelectedWallet(wallet)
-    saveWallet(wallet);
+    connectWallet({wallet, silent: false})
+      .then(() => {
+        setSelectedWallet(wallet)
+        saveWallet(wallet);
+      });
   };
 
   const getWalletAccount = async () => {
