@@ -1,20 +1,17 @@
 import { createContext, useEffect, useState, type ReactNode } from 'react';
 
-import type { WalletAccount } from '@wallet-standard/core';
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
 import type { UiWallet } from '@wallet-standard/react';
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
 import { useWallets } from '@wallet-standard/react';
 
 import { saveWallet, loadWallet } from '../lib/localStore';
-import { connectWallet, getAccount } from '../lib/wallet-standard';
+import { connectWallet } from '../lib/wallet-standard';
 
 const SelectedWalletContext = createContext<{
-  getWalletAccount: () => Promise<WalletAccount | undefined>;
   selectWallet: (wallet: UiWallet) => void;
   selectedWallet?: UiWallet;
 }>({
-  getWalletAccount: () => Promise.resolve(undefined),
   selectWallet: () => console.error('selectWallet not implemented'),
   selectedWallet: undefined,
 });
@@ -41,13 +38,8 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
       });
   };
 
-  const getWalletAccount = async () => {
-    if (!selectedWallet) return;
-    return getAccount(selectedWallet);
-  };
-
   return (
-    <SelectedWalletContext.Provider value={{ selectWallet, getWalletAccount, selectedWallet }}>
+    <SelectedWalletContext.Provider value={{ selectWallet, selectedWallet }}>
       {children}
     </SelectedWalletContext.Provider>
   );
