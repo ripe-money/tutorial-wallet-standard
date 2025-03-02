@@ -11,37 +11,37 @@ type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeatu
 
 import solana from '../lib/solana';
 
-// const sendSolUsdcFrom = async (wallet: UiWallet) => {
-//   console.log('latest block hash:', await solana.getLatestBlockhash());
-//   console.log('Sending 0.01 USDC from', wallet.features);
-//   const feature = getWalletFeature(wallet, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
-//   console.log('Feature:', feature.signAndSendTransaction);
-//   // feature.signAndSendTransaction({
-//   //   chain: SOLANA_MAINNET_CHAIN,
-//   //   account: address('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'),
-//   //   transaction: null,
-//   // })
-//   // const instr = getTransferInstruction({
-//   //   source: address('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'),
-//   //   destination: address('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'),
-//   //   amount: 1,
-//   //   authority: address('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'),
-//   // });
-//   // console.log('Instruction:', instr, typeof instr);
-// };
+import {
+  address,
+  // appendTransactionMessageInstruction,
+  createTransactionMessage,
+  pipe,
+  setTransactionMessageFeePayer,
+  setTransactionMessageLifetimeUsingBlockhash,
+} from '@solana/kit';
 
 export const SendSplButton = () => {
   const { selectedWallet } = useContext(SelectedWalletContext); // getWalletAccount
 
   useEffect(() => {
     const init = async () => {
-      console.log('latest block hash:', await solana.getLatestBlockhash());
+      const latestBlockhash = await solana.getLatestBlockhash();
+      console.log('latest block hash:', latestBlockhash);
 
       if (!selectedWallet) return;
       console.log('Wallet:', selectedWallet);
 
       const feature = getWalletFeature(selectedWallet, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
       console.log('Feature:', feature);
+
+      const feePayer = address('AxZfZWeqztBCL37Mkjkd4b8Hf6J13WCcfozrBY6vZzv3');
+      const message = pipe(
+        createTransactionMessage({ version: 'legacy' }),
+        m => setTransactionMessageFeePayer(feePayer, m),
+        m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+        // m => appendTransactionMessageInstruction(getAddMemoInstruction({ memo: text }), m),
+      );
+      console.log('Message:', message);
     };
     init();
   }, [selectedWallet]);
