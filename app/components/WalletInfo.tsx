@@ -7,7 +7,7 @@ import solana from '../lib/solana';
 
 import { SendSplButton } from './SendSplButton';
 
-const WalletBalance = () => {
+const WalletInfo = () => {
   const { getWalletAccount } = useContext(SelectedWalletContext);
   const [account, setAccount] = useState<WalletAccount | undefined>(undefined);
 
@@ -50,4 +50,4 @@ const formatBalance = (balance: number) => {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(balance);
 }
 
-export default WalletBalance;
+export default WalletInfo;
