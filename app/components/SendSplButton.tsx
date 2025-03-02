@@ -21,7 +21,7 @@ import {
 } from '@solana/kit';
 
 export const SendSplButton = () => {
-  const { selectedWallet } = useContext(SelectedWalletContext); // getWalletAccount
+  const { selectedWallet } = useContext(SelectedWalletContext);
 
   useEffect(() => {
     const init = async () => {

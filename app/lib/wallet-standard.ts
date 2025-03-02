@@ -7,7 +7,7 @@ type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect]
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
 import { getWalletFeature } from '@wallet-standard/react';
 
-export const connectWallet = async ({
+const connectWallet = async ({
   wallet,
   // Default to not bother user with permission prompt.
   // Set to false only when the action is user-initiated, e.g. clicking a button.
