@@ -22,7 +22,7 @@ const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 */
 
 import { SelectedWalletContextProvider } from './context/SelectedWalletContext';
-import WalletBalance from './components/WalletBalance';
+import WalletInfo from './components/WalletInfo';
 import WalletList from './components/WalletList';
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <SelectedWalletContextProvider>
-      <WalletBalance />
+      <WalletInfo />
       <hr />
       <WalletList />
     </SelectedWalletContextProvider>
