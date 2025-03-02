@@ -1,10 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
-import SelectedWalletContext from "../context/SelectedWalletContext";
+import { getWalletFeature, type UiWallet } from '@wallet-standard/react';
 
 import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
 import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';
-import { getWalletFeature } from '@wallet-standard/react';
 type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeature[typeof SolanaSignAndSendTransaction];
 
 // import { getTransferInstruction } from '@solana-program/token';
@@ -20,18 +19,15 @@ import {
   setTransactionMessageLifetimeUsingBlockhash,
 } from '@solana/kit';
 
-const SendSplButton = () => {
-  const { selectedWallet } = useContext(SelectedWalletContext);
+const SendSplButton = ({ wallet }: { wallet: UiWallet }) => {
+  console.log('Wallet:', wallet);
 
   useEffect(() => {
     const init = async () => {
       const latestBlockhash = await solana.getLatestBlockhash();
       console.log('latest block hash:', latestBlockhash);
 
-      if (!selectedWallet) return;
-      console.log('Wallet:', selectedWallet);
-
-      const feature = getWalletFeature(selectedWallet, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
+      const feature = getWalletFeature(wallet, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
       console.log('Feature:', feature);
 
       const feePayer = address('AxZfZWeqztBCL37Mkjkd4b8Hf6J13WCcfozrBY6vZzv3');
@@ -44,7 +40,7 @@ const SendSplButton = () => {
       console.log('Message:', message);
     };
     init();
-  }, [selectedWallet]);
+  }, [wallet]);
 
   return (
     <button
