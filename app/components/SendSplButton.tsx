@@ -20,7 +20,7 @@ import {
   setTransactionMessageLifetimeUsingBlockhash,
 } from '@solana/kit';
 
-export const SendSplButton = () => {
+const SendSplButton = () => {
   const { selectedWallet } = useContext(SelectedWalletContext);
 
   useEffect(() => {
@@ -55,3 +55,5 @@ export const SendSplButton = () => {
     </button>
   );
 };
+
+export default SendSplButton;

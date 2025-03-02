@@ -4,6 +4,7 @@ import type { WalletAccount } from '@wallet-standard/core';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
 import WalletBalance from './WalletBalance';
+import SendSplButton from './SendSplButton';
 
 const WalletInfo = () => {
   const { getWalletAccount } = useContext(SelectedWalletContext);
@@ -24,7 +25,10 @@ const WalletInfo = () => {
       <h1 className="text-3xl font-bold">
         {!account
           ? 'No wallet connected'
-          : <WalletBalance account={account} />
+          : <>
+              <WalletBalance account={account} />
+              <SendSplButton />
+            </>
         }
       </h1>
     </div>

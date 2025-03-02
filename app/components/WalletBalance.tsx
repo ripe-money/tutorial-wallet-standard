@@ -4,8 +4,6 @@ import type { WalletAccount } from '@wallet-standard/core';
 
 import solana from '../lib/solana';
 
-import { SendSplButton } from './SendSplButton';
-
 const WalletBalance = ({ account }: { account: WalletAccount }) => {
   const [balance, setBalance] = useState<number | null>(null);
 
@@ -21,7 +19,6 @@ const WalletBalance = ({ account }: { account: WalletAccount }) => {
   return (
     <>
       {formatAddress(account.address)} has {formatBalance(balance)} USDC
-      <SendSplButton />
     </>
   );
 };
