@@ -1,6 +1,6 @@
 import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
 
-import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
+import type { Address, Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
 import { address, createSolanaRpc } from '@solana/kit';
 
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
@@ -14,11 +14,15 @@ const getLatestBlockhash = async () => {
   return blockhash;
 };
 
-// Get the USDC balance of a Solana wallet account
-const getUsdcBalance = async (account: UiWalletAccount) => {
+// Get the token balance of a Solana wallet account
+const getTokenBalance = async (
+  account: UiWalletAccount,
+  // Default to USDC mint address if unspecified
+  mint: Address = address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!)
+) => {
   const { value } = await rpc.getTokenAccountsByOwner(
     address(account.address),
-    { mint: address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!) },
+    { mint },
     { commitment: 'confirmed', encoding: 'jsonParsed' }
   ).send();
 
@@ -40,5 +44,5 @@ const getSolBalance = async (account: UiWalletAccount) => {
   return lamports;
 };
 
-const solana = { getLatestBlockhash, getUsdcBalance, getSolBalance };
+const solana = { getLatestBlockhash, getTokenBalance, getSolBalance };
 export default solana;
