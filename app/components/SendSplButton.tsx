@@ -1,9 +1,9 @@
 import type { UiWalletAccount } from '@wallet-standard/react';
 
-import { getWalletAccountFeature } from '@wallet-standard/react';
-import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
-import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';
-type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeature[typeof SolanaSignAndSendTransaction];
+// import { getWalletAccountFeature } from '@wallet-standard/react';
+// import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
+// import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';
+// type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeature[typeof SolanaSignAndSendTransaction];
 
 import { useWalletAccountTransactionSendingSigner } from '@solana/react';
 import { getAddMemoInstruction } from '@solana-program/memo';
@@ -29,8 +29,8 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
     const latestBlockhash = await solana.getLatestBlockhash();
     console.log('latest block hash:', latestBlockhash);
 
-    const feature = getWalletAccountFeature(account, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
-    console.log('Feature:', feature);
+    // const feature = getWalletAccountFeature(account, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
+    // console.log('Feature:', feature);
 
     const message = pipe(
       createTransactionMessage({ version: 'legacy' }),
