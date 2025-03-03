@@ -4,7 +4,7 @@ import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
 import { useConnect } from '@wallet-standard/react';
 
 import WalletBalance from './WalletBalance';
-// import SendSplButton from './SendSplButton';
+import SendSplButton from './SendSplButton';
 
 const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
   const [isConnecting, connect] = useConnect(wallet);
@@ -19,12 +19,13 @@ const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
     });
   }, [connect, connectedAccounts]);
 
+  const account = connectedAccounts?.[0];
   return (
     <>
-      {connectedAccounts && connectedAccounts.length > 0
+      {account
         ? <>
-            <WalletBalance account={connectedAccounts[0]} />
-            {/* <SendSplButton wallet={wallet} /> */}
+            <WalletBalance account={account} />
+            <SendSplButton account={account} />
           </>
         : (isConnecting
           ? <>Connecting...</>
