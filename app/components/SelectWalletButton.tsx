@@ -7,7 +7,7 @@ import type { UiWallet } from '@wallet-standard/react';
 import SelectedWalletContext from '../context/SelectedWalletContext';
 import { isSolanaWallet } from '../lib/solana';
 
-export default function WalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
+export default function SelectWalletButton({ wallet }: Readonly<{ wallet: UiWallet }>) {
   const { selectWallet } = useContext(SelectedWalletContext);
 
   return (

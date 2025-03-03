@@ -3,7 +3,7 @@
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
 import { useWallets } from '@wallet-standard/react';
 
-import WalletButton from './WalletButton';
+import SelectWalletButton from './SelectWalletButton';
 
 export default function WalletList() {
   const availableWallets = useWallets();
@@ -15,7 +15,7 @@ export default function WalletList() {
         Available Wallets:
       </h1>
       <div className="flex flex-col">
-        {availableWallets.map((wallet, i) => <WalletButton key={i} wallet={wallet} />)}
+        {availableWallets.map((wallet, i) => <SelectWalletButton key={i} wallet={wallet} />)}
       </div>
     </>
   );
