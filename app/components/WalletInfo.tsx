@@ -13,10 +13,7 @@ const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
   useEffect(() => {
     if (connectedAccounts) return;
 
-    connect().then((accounts) => {
-      setConnectedAccounts(accounts);
-      console.log('Connected accounts:', accounts);
-    });
+    connect().then(setConnectedAccounts);
   }, [connect, connectedAccounts]);
 
   const account = connectedAccounts?.[0];
