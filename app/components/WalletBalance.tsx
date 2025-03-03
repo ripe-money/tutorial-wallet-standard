@@ -9,7 +9,7 @@ const WalletBalance = ({ account }: { account: UiWalletAccount }) => {
 
   useEffect(() => {
     solana.getSolBalance(account);
-    solana.getUsdcBalance(account).then(balance => setBalance(balance));
+    solana.getTokenBalance(account).then(balance => setBalance(balance));
   }, [account]);
 
   if (balance === null) {

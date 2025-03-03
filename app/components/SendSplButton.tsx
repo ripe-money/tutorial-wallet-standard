@@ -43,7 +43,6 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
     console.log('Transaction Message:', message);
 
     const signatureBytes = await signAndSendTransactionMessageWithSigners(message);
-
     const base58Signature = getBase58Decoder().decode(signatureBytes);
     console.log(`View transaction: https://explorer.solana.com/tx/${base58Signature}?cluster=devnet`);
   };
