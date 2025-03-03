@@ -1,8 +1,8 @@
 'use client';
+import { useContext } from 'react';
+
 // May be helpful to look at the Solana sample app
 // https://github.com/anza-xyz/solana-web3.js/tree/main/examples/react-app/src
-
-// import { useEffect } from 'react';
 
 // import { registerWalletAdapter, SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 
@@ -21,11 +21,11 @@ const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 
 */
 
-import { SelectedWalletContextProvider } from './context/SelectedWalletContext';
+import SelectedWalletContext, { SelectedWalletContextProvider } from './context/SelectedWalletContext';
 import WalletInfo from './components/WalletInfo';
 import WalletList from './components/WalletList';
 
-export default function Home() {
+export default function ProviderWrapper() {
   // Register adapters for wallets that don't natively support Wallet Standard
   // useEffect(() => {
   //   const destructors = adapters.map((adapter) => registerWalletAdapter(adapter, SOLANA_MAINNET_CHAIN));
@@ -34,9 +34,23 @@ export default function Home() {
 
   return (
     <SelectedWalletContextProvider>
-      <WalletInfo />
-      <hr />
-      <WalletList />
+      <Home />
     </SelectedWalletContextProvider>
   );
 }
+
+const Home = () => {
+  const { selectedWallet } = useContext(SelectedWalletContext);
+
+  return (
+    <>
+      <h1 className="text-3xl font-bold">
+        { selectedWallet
+          ? <WalletInfo wallet={selectedWallet} />
+          : 'No wallet connected' }
+      </h1>
+      <hr />
+      <WalletList />
+    </>
+  );
+};

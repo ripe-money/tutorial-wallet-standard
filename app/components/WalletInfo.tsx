@@ -1,39 +1,35 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { WalletAccount } from '@wallet-standard/core';
+import type { UiWallet } from '@wallet-standard/ui';
 
-import SelectedWalletContext from '../context/SelectedWalletContext';
 import WalletBalance from './WalletBalance';
 // import SendSplButton from './SendSplButton';
 import { getAccount } from '../lib/wallet-standard';
 
-const WalletInfo = () => {
-  const { selectedWallet } = useContext(SelectedWalletContext);
+const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
   const [account, setAccount] = useState<WalletAccount | undefined>(undefined);
 
   useEffect(() => {
     const updateBalance = async () => {
-      if (!selectedWallet) return;
-      const account = await getAccount(selectedWallet);
+      const account = await getAccount(wallet);
       if (!account) return;
 
       setAccount(account);
     };
     updateBalance();
-  }, [selectedWallet]);
+  }, [wallet]);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold">
-        {account && selectedWallet
-          ? <>
-              <WalletBalance account={account} />
-              {/* <SendSplButton wallet={selectedWallet} /> */}
-            </>
-          : 'No wallet connected'
-        }
-      </h1>
-    </div>
+    <>
+      {account
+        ? <>
+            <WalletBalance account={account} />
+            {/* <SendSplButton wallet={wallet} /> */}
+          </>
+        : 'No wallet connected'
+      }
+    </>
   );
 };
 
