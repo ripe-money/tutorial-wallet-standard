@@ -1,33 +1,34 @@
 import { useEffect, useState } from 'react';
 
-import type { WalletAccount } from '@wallet-standard/core';
-import type { UiWallet } from '@wallet-standard/ui';
+import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
+import { useConnect } from '@wallet-standard/react';
 
 import WalletBalance from './WalletBalance';
 // import SendSplButton from './SendSplButton';
-import { getAccount } from '../lib/wallet-standard';
 
 const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
-  const [account, setAccount] = useState<WalletAccount | undefined>(undefined);
+  const [isConnecting, connect] = useConnect(wallet);
+  const [connectedAccounts, setConnectedAccounts] = useState<readonly UiWalletAccount[]>();
 
   useEffect(() => {
-    const updateBalance = async () => {
-      const account = await getAccount(wallet);
-      if (!account) return;
+    if (connectedAccounts) return;
 
-      setAccount(account);
-    };
-    updateBalance();
-  }, [wallet]);
+    connect().then((accounts) => {
+      setConnectedAccounts(accounts);
+      console.log('Connected accounts:', accounts);
+    });
+  }, [connect, connectedAccounts]);
 
   return (
     <>
-      {account
+      {connectedAccounts && connectedAccounts.length > 0
         ? <>
-            <WalletBalance account={account} />
+            <WalletBalance account={connectedAccounts[0]} />
             {/* <SendSplButton wallet={wallet} /> */}
           </>
-        : 'No wallet connected'
+        : (isConnecting
+          ? <>Connecting...</>
+          : <>No account found</>)
       }
     </>
   );
