@@ -1,7 +1,19 @@
 import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
 
-import type { Address, Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
-import { address, createSolanaRpc } from '@solana/kit';
+import type { Address, Rpc, TransactionSigner } from '@solana/kit';
+import type { GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
+import {
+  address,
+  appendTransactionMessageInstructions,
+  createSolanaRpc,
+  createTransactionMessage,
+  getBase58Decoder,
+  pipe,
+  setTransactionMessageFeePayerSigner,
+  setTransactionMessageLifetimeUsingBlockhash,
+  signAndSendTransactionMessageWithSigners,
+} from '@solana/kit';
+import { getAddMemoInstruction } from '@solana-program/memo';
 
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
@@ -53,5 +65,38 @@ const getSolBalance = async (account: UiWalletAccount) => {
   return lamports;
 };
 
-const solana = { getLatestBlockhash, getTokenBalance, getSolBalance };
+// import { getWalletAccountFeature } from '@wallet-standard/react';
+// import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
+// import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';
+// type SolanaSignAndSendTransactionFeatureType = SolanaSignAndSendTransactionFeature[typeof SolanaSignAndSendTransaction];
+
+// const feature = getWalletAccountFeature(account, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
+// console.log('Feature:', feature);
+
+const transferTokens = async (
+  signer: TransactionSigner,
+  // to: Address,
+  // amount: number,
+  memo: string = '',
+) => {
+  const latestBlockhash = await getLatestBlockhash();
+
+  const transferTokenTxMsg = pipe(
+    createTransactionMessage({ version: 0 }),
+    m => setTransactionMessageFeePayerSigner(signer, m),
+    m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    m => appendTransactionMessageInstructions([
+      getAddMemoInstruction({ memo }),
+    ], m),
+  );
+  console.log('Transaction Message:', transferTokenTxMsg);
+
+  const signatureBytes = await signAndSendTransactionMessageWithSigners(transferTokenTxMsg);
+  const base58Signature = getBase58Decoder().decode(signatureBytes);
+  console.log(`View transaction: https://explorer.solana.com/tx/${base58Signature}?cluster=devnet`);
+}
+
+const solana = {
+  getLatestBlockhash, getTokenBalance, getSolBalance, transferTokens
+};
 export default solana;
