@@ -1,5 +1,4 @@
-import type { WalletAccount } from "@wallet-standard/core";
-import type { UiWallet } from "@wallet-standard/react";
+import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
 
 import type { Rpc, GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
 import { address, createSolanaRpc } from '@solana/kit';
@@ -16,7 +15,7 @@ const getLatestBlockhash = async () => {
 };
 
 // Get the USDC balance of a Solana wallet account
-const getUsdcBalance = async (account: WalletAccount) => {
+const getUsdcBalance = async (account: UiWalletAccount) => {
   const { value } = await rpc.getTokenAccountsByOwner(
     address(account.address),
     { mint: address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!) },
@@ -28,7 +27,7 @@ const getUsdcBalance = async (account: WalletAccount) => {
 
 // Get the SOL balance of a Solana wallet
 // Not needed for our app, but keeping it here to test it occasionally.
-const getSolBalance = async (account: WalletAccount) => {
+const getSolBalance = async (account: UiWalletAccount) => {
   const { value: lamports } =
     await rpc.getBalance(address(account.address), { commitment: 'confirmed' }).send();
 
