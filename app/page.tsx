@@ -23,7 +23,7 @@ const adapters = [new SolflareWalletAdapter(), new CoinbaseWalletAdapter()];
 
 import SelectedWalletContext, { SelectedWalletContextProvider } from './context/SelectedWalletContext';
 import WalletInfo from './components/WalletInfo';
-import WalletList from './components/WalletList';
+import SelectWalletList from './components/SelectWalletList';
 
 export default function ProviderWrapper() {
   // Register adapters for wallets that don't natively support Wallet Standard
@@ -50,7 +50,7 @@ const Home = () => {
           : 'No wallet connected' }
       </h1>
       <hr />
-      <WalletList />
+      <SelectWalletList />
     </>
   );
 };

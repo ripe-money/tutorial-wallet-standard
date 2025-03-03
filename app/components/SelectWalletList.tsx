@@ -5,7 +5,7 @@ import { useWallets } from '@wallet-standard/react';
 
 import SelectWalletButton from './SelectWalletButton';
 
-export default function WalletList() {
+export default function SelectWalletList() {
   const availableWallets = useWallets();
   console.log(availableWallets);
 
