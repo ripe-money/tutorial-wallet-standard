@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@solana-program/memo": "^0.6.1",
     "@solana/kit": "^2.1.0",
+    "@solana/react": "^2.1.0",
     "@solana/wallet-standard": "^1.1.4",
     "@tailwindcss/postcss": "^4.0.7",
     "@wallet-standard/core": "^1.1.0",
