@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import type { WalletAccount } from '@wallet-standard/core';
+import type { UiWalletAccount } from '@wallet-standard/ui';
 
 import solana from '../lib/solana';
 
-const WalletBalance = ({ account }: { account: WalletAccount }) => {
+const WalletBalance = ({ account }: { account: UiWalletAccount }) => {
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {

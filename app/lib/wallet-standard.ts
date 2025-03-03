@@ -1,7 +1,7 @@
 import type { UiWallet } from "@wallet-standard/react";
 
 import { StandardConnect } from '@wallet-standard/core';
-import type { StandardConnectFeature, WalletAccount } from '@wallet-standard/core';
+import type { StandardConnectFeature } from '@wallet-standard/core';
 type StandardConnectFeatureType = StandardConnectFeature[typeof StandardConnect];
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/features
@@ -21,12 +21,6 @@ export const connectWallet = async ({
     .then(({ accounts }) => accounts)
     .catch((error) => {
       console.error('Error connecting wallet:', wallet.name, error);
-      return [] as readonly WalletAccount[];
+      return [];
     });
-};
-
-export const getAccount = async (wallet: UiWallet) => {
-  const accounts = await connectWallet({ wallet });
-  if (accounts.length === 0) return;
-  return accounts[0];
 };
