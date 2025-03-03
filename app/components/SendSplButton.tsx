@@ -33,7 +33,7 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
     // console.log('Feature:', feature);
 
     const message = pipe(
-      createTransactionMessage({ version: 'legacy' }),
+      createTransactionMessage({ version: 0 }),
       m => setTransactionMessageFeePayerSigner(signer, m),
       m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
       m => appendTransactionMessageInstructions([

@@ -14,7 +14,12 @@ const getLatestBlockhash = async () => {
   return blockhash;
 };
 
-// Get the token balance of a Solana wallet account
+/**
+ * Get the token balance of a Solana wallet account
+ * @param account - The wallet account to get the token balance for
+ * @param mint - The token mint address, default to USDC
+ * @returns The token balance of the wallet account
+ */
 const getTokenBalance = async (
   account: UiWalletAccount,
   // Default to USDC mint address if unspecified
@@ -29,8 +34,12 @@ const getTokenBalance = async (
   return value[0]?.account.data.parsed.info.tokenAmount.uiAmount || 0;
 };
 
-// Get the SOL balance of a Solana wallet
-// Not needed for our app, but keeping it here to test it occasionally.
+/**
+ * Get the SOL balance of a Solana wallet.
+ * Not needed for our app, but keeping it here to test it occasionally.
+ * @param account - The wallet account to get the SOL balance for
+ * @returns The SOL balance of the wallet account
+ */
 const getSolBalance = async (account: UiWalletAccount) => {
   const { value: lamports } =
     await rpc.getBalance(address(account.address), { commitment: 'confirmed' }).send();
