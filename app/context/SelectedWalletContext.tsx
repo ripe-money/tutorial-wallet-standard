@@ -6,7 +6,6 @@ import type { UiWallet } from '@wallet-standard/react';
 import { useWallets } from '@wallet-standard/react';
 
 import { saveWallet, loadWallet } from '../lib/localStore';
-import { connectWallet } from '../lib/wallet-standard';
 
 const SelectedWalletContext = createContext<{
   selectWallet: (wallet: UiWallet) => void;
@@ -31,11 +30,8 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
   }, [availableWallets, selectedWallet]);
 
   const selectWallet = (wallet: UiWallet) => {
-    connectWallet({wallet, silent: false})
-      .then(() => {
-        setSelectedWallet(wallet)
-        saveWallet(wallet);
-      });
+    setSelectedWallet(wallet)
+    saveWallet(wallet);
   };
 
   return (
