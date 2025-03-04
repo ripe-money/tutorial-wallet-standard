@@ -1,7 +1,7 @@
 import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
 
 import type { Address, Rpc, TransactionSigner } from '@solana/kit';
-import type { GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi } from '@solana/kit';
+import type { GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi, GetAccountInfoApi } from '@solana/kit';
 import {
   address,
   appendTransactionMessageInstructions,
@@ -13,12 +13,19 @@ import {
   setTransactionMessageLifetimeUsingBlockhash,
   signAndSendTransactionMessageWithSigners,
 } from '@solana/kit';
+import {
+  fetchMint,
+  findAssociatedTokenPda,
+  getCreateAssociatedTokenInstruction,
+  getTransferCheckedInstruction,
+  TOKEN_PROGRAM_ADDRESS,
+} from '@solana-program/token';
 import { getAddMemoInstruction } from '@solana-program/memo';
 
 import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
 export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
-const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi> =
+const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi & GetAccountInfoApi> =
   createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
 
 const getLatestBlockhash = async () => {
@@ -73,21 +80,65 @@ const getSolBalance = async (account: UiWalletAccount) => {
 // const feature = getWalletAccountFeature(account, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
 // console.log('Feature:', feature);
 
+// https://solana.stackexchange.com/questions/20108/how-do-i-transfer-an-spl-token-using-web3-js-version-2
+// https://github.com/helius-labs/kite/blob/main/src/lib/tokens.ts
 const transferTokens = async (
-  signer: TransactionSigner,
-  // to: Address,
-  // amount: number,
-  memo: string = '',
+  sender: TransactionSigner,
+  receiver: Address,
+  amount: bigint,
+  memo: string,
+  mintAddress: Address = address(process.env.NEXT_PUBLIC_SOLANA_USDC_MINT!),
 ) => {
   const latestBlockhash = await getLatestBlockhash();
 
+  // Get the mint's metadata, such as its decimals
+  const mint = await fetchMint(rpc, mintAddress);
+  console.log('Mint:', mint);
+
+  const [sourceAssociatedTokenAddress] = await findAssociatedTokenPda({
+    mint: mint.address,
+    owner: sender.address,
+    tokenProgram: TOKEN_PROGRAM_ADDRESS,
+  });
+
+  const [destinationAssociatedTokenAddress] = await findAssociatedTokenPda({
+    mint: mint.address,
+    owner: receiver,
+    tokenProgram: TOKEN_PROGRAM_ADDRESS,
+  });
+
+  const createAssociatedTokenInstruction = getCreateAssociatedTokenInstruction({
+    ata: destinationAssociatedTokenAddress,
+    mint: mint.address,
+    owner: receiver,
+    payer: sender,
+  });
+  console.log('Create Associated Token Instruction:', createAssociatedTokenInstruction);
+
+  const transferInstruction = getTransferCheckedInstruction({
+    source: sourceAssociatedTokenAddress,
+    mint: mintAddress,
+    destination: destinationAssociatedTokenAddress,
+    authority: sender.address,
+    amount,
+    decimals: mint.data.decimals,
+  });
+  console.log('Transfer Instruction:', transferInstruction);
+
+  const addMemoInstruction = getAddMemoInstruction({ memo });
+  console.log('Add Memo Instruction:', addMemoInstruction);
+
+  const instructions = [
+    // createAssociatedTokenInstruction,
+    transferInstruction,
+    addMemoInstruction,
+  ];
+
   const transferTokenTxMsg = pipe(
     createTransactionMessage({ version: 0 }),
-    m => setTransactionMessageFeePayerSigner(signer, m),
+    m => setTransactionMessageFeePayerSigner(sender, m),
     m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
-    m => appendTransactionMessageInstructions([
-      getAddMemoInstruction({ memo }),
-    ], m),
+    m => appendTransactionMessageInstructions(instructions, m),
   );
   console.log('Transaction Message:', transferTokenTxMsg);
 
@@ -97,6 +148,6 @@ const transferTokens = async (
 }
 
 const solana = {
-  getLatestBlockhash, getTokenBalance, getSolBalance, transferTokens
+  getTokenBalance, getSolBalance, transferTokens
 };
 export default solana;
