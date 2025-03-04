@@ -1,11 +1,11 @@
 import type { UiWalletAccount } from '@wallet-standard/react';
 
+// https://github.com/anza-xyz/kit/tree/main/packages/react
 import { useWalletAccountTransactionSendingSigner } from '@solana/react';
 import { address } from '@solana/kit';
 
 import solana from '../lib/solana';
 
-// https://github.com/anza-xyz/kit/tree/main/packages/react
 const SendSplButton = ({
   account,
   onTransactionSent,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
+// https://github.com/wallet-standard/wallet-standard/tree/master/packages/react/core
 import { useConnect } from '@wallet-standard/react';
 
 import WalletBalance from './WalletBalance';
