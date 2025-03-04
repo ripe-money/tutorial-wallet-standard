@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/ui/core
-import type { UiWallet } from '@wallet-standard/react';
+import type { UiWallet } from '@wallet-standard/ui';
 
 import SelectedWalletContext from '../context/SelectedWalletContext';
 import { isSolanaWallet } from '../lib/solana';

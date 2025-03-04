@@ -1,4 +1,4 @@
-import type { UiWalletAccount } from '@wallet-standard/react';
+import type { UiWalletAccount } from "@wallet-standard/ui";
 
 // https://github.com/anza-xyz/kit/tree/main/packages/react
 import { useWalletAccountTransactionSendingSigner } from '@solana/react';
