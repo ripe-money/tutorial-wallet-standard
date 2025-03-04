@@ -6,7 +6,13 @@ import { address } from '@solana/kit';
 import solana from '../lib/solana';
 
 // https://github.com/anza-xyz/kit/tree/main/packages/react
-const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
+const SendSplButton = ({
+  account,
+  onTransactionSent,
+}: {
+  account: UiWalletAccount,
+  onTransactionSent?: () => void,
+}) => {
   const signer = useWalletAccountTransactionSendingSigner(account, 'solana:devnet');
 
   return (
@@ -15,10 +21,12 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
       onClick={() => {
         solana.transferTokens(
           signer,
-          address('7pEduvx1xwxM4QVpPWyXQMyVFAz14hSTMBVPMPpVXtWs'), // Devnet 2
+          // "Devnet 2" in Chuck's wallet
+          address('7pEduvx1xwxM4QVpPWyXQMyVFAz14hSTMBVPMPpVXtWs'),
           BigInt(30000), // 0.03 USDC
           'Your money is ripe',
-        );
+        )
+        .then(() => onTransactionSent?.())
       }}
     >
       Send 0.03 USDC
