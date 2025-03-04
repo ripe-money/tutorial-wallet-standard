@@ -6,6 +6,12 @@ We avoid using Solana Wallet Adapters not only because they're Solana-specific. 
 While we try to be chain-agnostic as much as possible, looking up balances and creating transactions will unavoidably be chain-specific. We try to factor out all Solana-specific code into the `/lib/solana.ts` file.
 
 ## Development
-It's a Next.js app (`create-next-app`) that you can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
+It's a Next.js app (`create-next-app`). Create a `.env` file with something like the following for Solana devnet. (Ask Chuck for the RPC endpoint for Helius, but any RPC endpoint for devnet should work.)
+```sh
+NEXT_PUBLIC_SOLANA_RPC=
+NEXT_PUBLIC_SOLANA_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+```
+
+You can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
 
 After selecting to a wallet, the app remembers the selection by storing it in the browser's local storage. You can delete that memory by going to the `/reset` page.

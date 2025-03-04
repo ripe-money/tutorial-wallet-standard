@@ -16,12 +16,12 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
         solana.transferTokens(
           signer,
           address('7pEduvx1xwxM4QVpPWyXQMyVFAz14hSTMBVPMPpVXtWs'), // Devnet 2
-          BigInt(50000), // 0.01 USDC
+          BigInt(30000), // 0.03 USDC
           'Your money is ripe',
         );
       }}
     >
-      Send 0.05 USDC
+      Send 0.03 USDC
     </button>
   );
 };
