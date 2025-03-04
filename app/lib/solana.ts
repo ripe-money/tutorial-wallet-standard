@@ -147,6 +147,7 @@ const transferTokens = async (
     addMemoInstruction,
   ];
 
+  // https://github.com/anza-xyz/kit/tree/main/packages/react#usewalletaccounttransactionsendingsigneruiwalletaccount-chain
   const transferTokenTxMsg = pipe(
     createTransactionMessage({ version: 0 }),
     m => setTransactionMessageFeePayerSigner(sender, m),

@@ -14,4 +14,4 @@ NEXT_PUBLIC_SOLANA_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
 
 You can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
 
-After selecting to a wallet, the app remembers the selection by storing it in the browser's local storage. You can delete that memory by going to the `/reset` page.
+After selecting a wallet, the app remembers the selection by storing it in the browser's local storage. That memory is deleted when you disconnect the wallet.
