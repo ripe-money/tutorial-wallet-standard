@@ -1,6 +1,7 @@
 import type { UiWalletAccount } from '@wallet-standard/react';
 
 import { useWalletAccountTransactionSendingSigner } from '@solana/react';
+import { address } from '@solana/kit';
 
 import solana from '../lib/solana';
 
@@ -10,10 +11,17 @@ const SendSplButton = ({ account }: { account: UiWalletAccount }) => {
 
   return (
     <button
-      className="btn btn-primary"
-      onClick={() => solana.transferTokens(signer, 'Your money is ripe')}
+      className="btn btn-primary m-2"
+      onClick={() => {
+        solana.transferTokens(
+          signer,
+          address('7pEduvx1xwxM4QVpPWyXQMyVFAz14hSTMBVPMPpVXtWs'), // Devnet 2
+          BigInt(50000), // 0.01 USDC
+          'Your money is ripe',
+        );
+      }}
     >
-      Send memo onchain
+      Send 0.05 USDC
     </button>
   );
 };
