@@ -5,13 +5,15 @@ import type { UiWallet } from '@wallet-standard/react';
 // https://github.com/wallet-standard/wallet-standard/blob/master/packages/react/core
 import { useWallets } from '@wallet-standard/react';
 
-import { saveWallet, loadWallet } from '../lib/localStore';
+import { saveWallet, loadWallet, removeWallet } from '../lib/localStore';
 
 const SelectedWalletContext = createContext<{
   selectWallet: (wallet: UiWallet) => void;
+  deselectWallet: () => void;
   selectedWallet?: UiWallet;
 }>({
   selectWallet: () => console.error('selectWallet not implemented'),
+  deselectWallet: () => console.error('deselectWallet not implemented'),
   selectedWallet: undefined,
 });
 
@@ -34,8 +36,13 @@ const SelectedWalletContextProvider = ({ children }: { children: ReactNode }) =>
     saveWallet(wallet);
   };
 
+  const deselectWallet = () => {
+    setSelectedWallet(undefined);
+    removeWallet();
+  };
+
   return (
-    <SelectedWalletContext.Provider value={{ selectWallet, selectedWallet }}>
+    <SelectedWalletContext.Provider value={{ selectWallet, selectedWallet, deselectWallet }}>
       {children}
     </SelectedWalletContext.Provider>
   );

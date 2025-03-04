@@ -17,7 +17,7 @@ const SendSplButton = ({
 
   return (
     <button
-      className="btn btn-primary m-2"
+      className="btn btn-primary my-2"
       onClick={() => {
         solana.transferTokens(
           signer,
