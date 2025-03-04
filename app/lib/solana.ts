@@ -72,6 +72,9 @@ const getSolBalance = async (account: UiWalletAccount) => {
   return lamports;
 };
 
+// We're using signAndSendTransactionMessageWithSigners from @solana/kit
+// to sign and send the transaction. For other chains (Sui?), we may have
+// to use something like the following.
 // import { getWalletAccountFeature } from '@wallet-standard/react';
 // import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
 // import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';
@@ -80,8 +83,18 @@ const getSolBalance = async (account: UiWalletAccount) => {
 // const feature = getWalletAccountFeature(account, SolanaSignAndSendTransaction) as SolanaSignAndSendTransactionFeatureType;
 // console.log('Feature:', feature);
 
-// https://solana.stackexchange.com/questions/20108/how-do-i-transfer-an-spl-token-using-web3-js-version-2
-// https://github.com/helius-labs/kite/blob/main/src/lib/tokens.ts
+/**
+ * Transfer tokens from one wallet to another
+ * 
+ * Written based on studying the following resources:
+ * https://solana.stackexchange.com/questions/20108/how-do-i-transfer-an-spl-token-using-web3-js-version-2
+ * https://github.com/helius-labs/kite/blob/main/src/lib/tokens.ts
+ * @param sender - Wallet account to send tokens from. Must be a transaction signer.
+ * @param receiver - Wallet account to send tokens to.
+ * @param amount - Amount of tokens to send. Represented as a bigint so need to be aware of the decimals.
+ * @param memo - Memo to include in the transaction
+ * @param mintAddress - Token mint address. Default to USDC.
+ */
 const transferTokens = async (
   sender: TransactionSigner,
   receiver: Address,
@@ -138,6 +151,7 @@ const transferTokens = async (
     createTransactionMessage({ version: 0 }),
     m => setTransactionMessageFeePayerSigner(sender, m),
     m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    // @ts-expect-error - I can't figure out the type compatibility issue. Ignore it for now.
     m => appendTransactionMessageInstructions(instructions, m),
   );
   console.log('Transaction Message:', transferTokenTxMsg);
