@@ -5,6 +5,7 @@ import { useWalletAccountTransactionSendingSigner } from '@solana/react';
 import { address } from '@solana/kit';
 
 import solana from '../lib/solana';
+const CHAIN = process.env.NEXT_PUBLIC_CHAIN as `solana:${string}`;
 
 const SendSplButton = ({
   account,
@@ -13,7 +14,7 @@ const SendSplButton = ({
   account: UiWalletAccount,
   onTransactionSent?: () => void,
 }) => {
-  const signer = useWalletAccountTransactionSendingSigner(account, 'solana:devnet');
+  const signer = useWalletAccountTransactionSendingSigner(account, CHAIN);
 
   return (
     <button

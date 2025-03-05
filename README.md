@@ -8,6 +8,7 @@ While we try to be chain-agnostic as much as possible, looking up balances and c
 ## Development
 It's a Next.js app (`create-next-app`). Create a `.env` file with something like the following for Solana devnet. (Ask Chuck for the RPC endpoint for Helius, but any RPC endpoint for devnet should work.)
 ```sh
+NEXT_PUBLIC_CHAIN=solana:devnet
 NEXT_PUBLIC_SOLANA_RPC=
 NEXT_PUBLIC_SOLANA_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
 ```

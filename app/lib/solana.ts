@@ -1,4 +1,4 @@
-import type { UiWallet, UiWalletAccount } from '@wallet-standard/ui';
+import type { UiWalletAccount } from '@wallet-standard/ui';
 
 import type { Address, Rpc, TransactionSigner } from '@solana/kit';
 import type { GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi, GetAccountInfoApi } from '@solana/kit';
@@ -21,9 +21,6 @@ import {
   TOKEN_PROGRAM_ADDRESS,
 } from '@solana-program/token';
 import { getAddMemoInstruction } from '@solana-program/memo';
-
-import { SOLANA_MAINNET_CHAIN } from '@solana/wallet-standard';
-export const isSolanaWallet = (wallet: UiWallet) => wallet.chains.includes(SOLANA_MAINNET_CHAIN);
 
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi & GetAccountInfoApi> =
   createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
