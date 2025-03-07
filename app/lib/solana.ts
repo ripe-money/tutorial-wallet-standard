@@ -1,11 +1,15 @@
 import type { UiWalletAccount } from '@wallet-standard/ui';
 
-import type { Address, Rpc, TransactionSigner } from '@solana/kit';
-import type { GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi, GetAccountInfoApi } from '@solana/kit';
+import type { Address, Rpc, RpcSubscriptions, TransactionSigner } from '@solana/kit';
+import type {
+  GetBalanceApi, GetTokenAccountsByOwnerApi, GetLatestBlockhashApi, GetAccountInfoApi,
+  AccountNotificationsApi,
+} from '@solana/kit';
 import {
   address,
   appendTransactionMessageInstructions,
   createSolanaRpc,
+  createSolanaRpcSubscriptions,
   createTransactionMessage,
   getBase58Decoder,
   pipe,
@@ -24,6 +28,8 @@ import { getAddMemoInstruction } from '@solana-program/memo';
 
 const rpc: Rpc<GetBalanceApi & GetTokenAccountsByOwnerApi & GetLatestBlockhashApi & GetAccountInfoApi> =
   createSolanaRpc(process.env.NEXT_PUBLIC_SOLANA_RPC!);
+const rpcSubscriptions: RpcSubscriptions<AccountNotificationsApi> =
+  createSolanaRpcSubscriptions(process.env.NEXT_PUBLIC_SOLANA_RPC_WS!);
 
 const getLatestBlockhash = async () => {
   const { value: blockhash } = await rpc.getLatestBlockhash().send();
@@ -160,6 +166,6 @@ const transferTokens = async (
 }
 
 const solana = {
-  getTokenBalance, getSolBalance, transferTokens
+  rpcSubscriptions, getTokenBalance, getSolBalance, transferTokens,
 };
 export default solana;

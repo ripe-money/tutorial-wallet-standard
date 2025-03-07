@@ -11,7 +11,6 @@ import DeselectWalletButton from './DeselectWalletButton';
 const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
   const [isConnecting, connect] = useConnect(wallet);
   const [connectedAccounts, setConnectedAccounts] = useState<readonly UiWalletAccount[]>();
-  const [key, setKey] = useState(0);
 
   useEffect(() => {
     if (connectedAccounts) return;
@@ -24,15 +23,9 @@ const WalletInfo = ({ wallet }: { wallet: UiWallet }) => {
     <>
       {account
         ? <div className="flex flex-col">
-            <WalletBalance account={account} key={key} />
+            <WalletBalance account={account} />
             <DeselectWalletButton wallet={wallet} />
-            <SendSplButton account={account} onTransactionSent={() => {
-              // Update the wallet balance after sending a transaction
-              // Force a re-render by changing the (unnecessary) `key` prop.
-              // See https://josipmisko.com/posts/react-force-rerender
-              // Also wait 2 seconds to ensure the new balance is properly reflected
-              setTimeout(() => setKey((k) => k + 1), 2000);
-            }} />
+            <SendSplButton account={account} />
           </div>
         : (isConnecting
           ? <>Connecting...</>

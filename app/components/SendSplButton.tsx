@@ -16,20 +16,15 @@ const MEMO = 'Your money is ripe';
 
 const SendSplButton = ({
   account,
-  onTransactionSent,
 }: {
   account: UiWalletAccount,
-  onTransactionSent?: () => void,
 }) => {
   const signer = useWalletAccountTransactionSendingSigner(account, CHAIN);
 
   return (
     <button
       className="btn btn-primary my-2"
-      onClick={() => {
-        solana.transferTokens(signer, RECEIVER_ADDRESS, AMOUNT, MEMO)
-        .then(() => onTransactionSent?.())
-      }}
+      onClick={() => solana.transferTokens(signer, RECEIVER_ADDRESS, AMOUNT, MEMO)}
     >
       Send 0.03 USDC
     </button>

@@ -2,14 +2,34 @@ import { useEffect, useState } from 'react';
 
 import type { UiWalletAccount } from '@wallet-standard/ui';
 
+import { address } from '@solana/kit';
 import solana from '../lib/solana';
+
+const abortController = new AbortController();
 
 const WalletBalance = ({ account }: { account: UiWalletAccount }) => {
   const [balance, setBalance] = useState<number | null>(null);
 
   useEffect(() => {
-    solana.getSolBalance(account);
-    solana.getTokenBalance(account).then(balance => setBalance(balance));
+    const getBalances = async () => {
+      const refreshTokenBalance = async () => {
+        solana.getTokenBalance(account).then(balance => setBalance(balance));
+      };
+
+      solana.getSolBalance(account);
+      refreshTokenBalance();
+
+      // Set up to be notified of account changes
+      const accountNotifications = await solana.rpcSubscriptions
+        .accountNotifications(address(account.address), { commitment: 'confirmed' })
+        .subscribe({ abortSignal: abortController.signal });
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      for await (const notification of accountNotifications) {
+        refreshTokenBalance();
+      }
+    };
+    getBalances();
   }, [account]);
 
   if (balance === null) {
