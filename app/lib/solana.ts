@@ -20,7 +20,7 @@ import {
 import {
   fetchMint,
   findAssociatedTokenPda,
-  getCreateAssociatedTokenInstruction,
+  // getCreateAssociatedTokenInstruction,
   getTransferCheckedInstruction,
   TOKEN_PROGRAM_ADDRESS,
 } from '@solana-program/token';
@@ -155,13 +155,13 @@ const transferTokens = async (
     tokenProgram: TOKEN_PROGRAM_ADDRESS,
   });
 
-  const createAssociatedTokenInstruction = getCreateAssociatedTokenInstruction({
-    ata: destinationAssociatedTokenAddress,
-    mint: mint.address,
-    owner: receiver,
-    payer: sender,
-  });
-  console.log('Create Associated Token Instruction:', createAssociatedTokenInstruction);
+  // const createAssociatedTokenInstruction = getCreateAssociatedTokenInstruction({
+  //   ata: destinationAssociatedTokenAddress,
+  //   mint: mint.address,
+  //   owner: receiver,
+  //   payer: sender,
+  // });
+  // console.log('Create Associated Token Instruction:', createAssociatedTokenInstruction);
 
   const transferInstruction = getTransferCheckedInstruction({
     source: sourceAssociatedTokenAddress,
