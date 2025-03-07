@@ -29,6 +29,10 @@ const getLatestBlockhash = async () => {
 // We're using signAndSendTransactionMessageWithSigners from @solana/kit
 // to sign and send the transaction. For other chains (Sui?), we may have
 // to use something like the following.
+// See also:
+// https://github.com/anza-xyz/wallet-standard/blob/master/packages/core/features/src/signTransaction.ts
+// https://github.com/anza-xyz/wallet-standard/blob/master/packages/core/features/src/signAndSendTransaction.ts
+// 
 // import { getWalletAccountFeature } from '@wallet-standard/react';
 // import type { SolanaSignAndSendTransactionFeature } from '@solana/wallet-standard';
 // import { SolanaSignAndSendTransaction } from '@solana/wallet-standard';

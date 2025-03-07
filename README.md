@@ -17,3 +17,9 @@ NEXT_PUBLIC_SOLANA_USDC_MINT=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
 You can run locally using `npm run dev`. The [homepage](http://localhost:3000/) shows wallets accessible from the dApp.
 
 After selecting a wallet, the app remembers the selection by storing it in the browser's local storage. That memory is deleted when you disconnect the wallet.
+
+## Bookmarks:
+Didn't use these guides in development, but they show slightly alternative ways to send transactions:
+- [Creating a Fungible Token with Solana Web3.js 2.0](https://www.quicknode.com/guides/solana-development/tooling/web3-2/fungibles)
+- [How to Send Transactions with Solana Web3.js 2.0](https://www.quicknode.com/guides/solana-development/tooling/web3-2/transfer-sol#sign-and-send-transaction)
+- [Signing transactions with dynamic WalletAccount from wallet-standard](https://solana.stackexchange.com/questions/18749/signing-transactions-with-dynamic-walletaccount-from-wallet-standard)
