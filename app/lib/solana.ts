@@ -75,6 +75,38 @@ const getSolBalance = async (account: UiWalletAccount) => {
   return lamports;
 };
 
+/**
+ * Subscribe to the balance of a Solana wallet account
+ * @param account - The wallet account to subscribe to
+ * @param callback - The callback function to call when the balance changes
+ */
+const subscribeToBalance = async (
+  account: UiWalletAccount,
+  callback: (balance: number) => void
+) => {
+  // https://github.com/anza-xyz/kit?tab=readme-ov-file#subscriptions-as-asynciterators
+  const getAccountNotifications = async (account: UiWalletAccount) => {
+    const abortController = new AbortController();
+    return rpcSubscriptions
+      .accountNotifications(address(account.address), { commitment: 'confirmed' })
+      .subscribe({ abortSignal: abortController.signal });
+  };
+
+  getSolBalance(account); // Just for testing
+
+  const balance = await getTokenBalance(account);
+  callback(balance);
+
+  // Set up to be notified of account changes
+  const accountNotifications = await getAccountNotifications(account);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for await (const notification of accountNotifications) {
+    const balance = await getTokenBalance(account);
+    callback(balance);
+  }
+};
+
 // We're using signAndSendTransactionMessageWithSigners from @solana/kit
 // to sign and send the transaction. For other chains (Sui?), we may have
 // to use something like the following.
@@ -166,6 +198,6 @@ const transferTokens = async (
 }
 
 const solana = {
-  rpcSubscriptions, getTokenBalance, getSolBalance, transferTokens,
+  subscribeToBalance, transferTokens,
 };
 export default solana;
